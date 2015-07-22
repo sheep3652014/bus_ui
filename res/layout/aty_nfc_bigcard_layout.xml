@@ -2,32 +2,149 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:background="@color/white"
+    >
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="horizontal"
+    	android:background="@color/l_blue"
+    	android:paddingTop="10dp"
+    	android:paddingBottom="10dp"
+        >
+        
+        <TextView 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/bigCard_Title"
+            android:textSize="@dimen/font_size_18"
+            android:textColor="@color/white"
+            android:layout_marginLeft="10dp"
+	    	android:layout_marginRight="10dp"
+            />
+    </LinearLayout>
     
 	<TextView 
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:text="@string/bigCard_notice"
 	    android:textSize="@dimen/font_size_16"
-	    android:textColor="@color/deep_gray"
+	    android:textColor="@color/black"
+	    android:layout_marginLeft="20dp"
+	    android:layout_marginRight="20dp"
+	    android:layout_marginTop="20dp"
 	    />
 	
 	<ImageButton 
 		android:id="@+id/ib_check"
-		android:layout_width="40dp"
-		android:layout_height="40dp"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
 		android:layout_gravity="center"
-		android:src="@drawable/gantan_s"    
+		android:background="@drawable/btn_select"    
+		android:layout_marginTop="20dp"
 	    />
 	
+	<LinearLayout 
+	    android:id="@+id/Lin_whyClick"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:layout_marginRight="20dp"
+	    android:layout_marginEnd="20dp"
+	    android:layout_gravity="end"
+	    android:gravity="center_vertical"
+	    >
+        <ImageView 
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/question_s"
+            />
+	    <TextView 
+	        android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bigCard_whyClick"
+            android:textColor="@color/l_blue"
+            android:textSize="@dimen/font_size_16"
+	        />
+	</LinearLayout>
 	<!-- 第一次刷卡界面 -->
 	<FrameLayout 
 		android:id="@+id/frame_bigCardInit"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginRight="10dp" 
-		android:layout_marginLeft="10dp"
+		android:layout_marginRight="20dp" 
+		android:layout_marginLeft="20dp"
 		/>
 	
+	<LinearLayout 
+	    android:id="@+id/Lin_help"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:layout_marginLeft="20dp"
+	    android:layout_marginRight="20dp"
+		android:layout_marginTop="50dp"	    
+	    >
 	    
+	    <TextView 
+	        android:id="@+id/tv_help_title"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/bigCard_help_title"
+	        android:textSize="@dimen/font_size_16"
+	        android:textColor="@color/black"
+	        android:textStyle="bold"
+	        />
+	    
+	    <TextView 
+	        android:id="@+id/tv_help_1"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/bigCard_help_1"
+	        android:textSize="@dimen/font_size_16"
+	        android:textColor="@color/black"
+	        />
+	    <TextView 
+	        android:id="@+id/tv_help_2"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/bigCard_help_2"
+	        android:textSize="@dimen/font_size_16"
+	        android:textColor="@color/black"
+	        />
+	    <TextView 
+	        android:id="@+id/tv_help_3"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/bigCard_help_3"
+	        android:textSize="@dimen/font_size_16"
+	        android:textColor="@color/black"
+	        />
+	    <TextView 
+	        android:id="@+id/tv_help_4"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/bigCard_help_4"
+	        android:textSize="@dimen/font_size_16"
+	        android:textColor="@color/black"
+	        />
+	    <TextView 
+	        android:id="@+id/tv_help_5"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/bigCard_help_5"
+	        android:textSize="@dimen/font_size_16"
+	        android:textColor="@color/black"
+	        />
+	    <TextView 
+	        android:id="@+id/tv_help_6"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/bigCard_help_6"
+	        android:textSize="@dimen/font_size_16"
+	        android:textColor="@color/black"
+	        />
+	</LinearLayout>    
 </LinearLayout>

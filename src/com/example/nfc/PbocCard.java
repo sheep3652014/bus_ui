@@ -84,7 +84,8 @@ public class PbocCard {
 		*/
 		
 		do{
-			if ((card = WuhanTong.loadCommon(tag, res)) != null)
+			//if ((card = WuhanTong.loadCommon(tag, res)) != null)
+			if((card = YiChangTong.load(tag, res)) != null)
 				break;
 		}while(false);
 		

@@ -16,4 +16,7 @@ public class Global_Config
 	public static final String BIG_AID = "a00000000386980701";//
 	public static final String CIRCLE_INIT = "805000020B01";
 	public static final String CIRCLE_WRITE = "805200000B";
+	
+	public static final String BIG_AID_YICHANG = "00a40000021002";//宜昌大卡AID
+	public static final String CITY_CODE_YICHANG = "4430";//宜昌城市代码
 }

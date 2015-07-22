@@ -12,13 +12,36 @@
     <string name="bigCard_funcation_Des">查询普通公交卡余额，记录以及充值</string>
     <string name="swpCard_funcation_Des">查询SWP-NFC卡余额，记录以及充值</string>
     <string name="other_funcation_Des">其它管理功能</string>
+    <string name="network_error">网络故障，请检查网络！</string>
     <!-- 功能选择界面 -->
 
     <!-- NFC-bigCard -->
-    <string name="bigCard_notice">大卡提示……</string>
+    <string name="bigCard_Title">普通公交卡充值</string>
+    <string name="bigCard_notice">步骤一：点击下方按钮，在弹框出现后将宜昌通卡贴于手机NFC天线处。</string>
     <string name="ChargeSelect_notice">充值金额选择：</string>
+    <string name="bigCard_help_title">您需要知道的：</string>
+    <string name="bigCard_help_1">1、使用中必须开启NFC功能</string>
+    <string name="bigCard_help_2">2、暂时仅支持电信翼支付</string>
+    <!-- <string name="bigCard_help_3">3、充值=支付+圈存，请勿中途退出</string> -->
+    <string name="bigCard_help_3">
+        <Data><![CDATA[3、<font color="#ff0000"><b>充值=支付+圈存</b></font>，请勿中途退出]]></Data></string>
+    <string name="bigCard_help_4">4、第一次使用时需进行圈存测试，不兼容手机会提示圈存失败</string>
+    <string name="bigCard_help_5">5、暂不能提供发票</string>
+    <!-- <string name="bigCard_help_6">6、以传统官方客户热线：0717&#8211;1234567</string> -->
+    <string name="bigCard_help_6">
+        <Data><![CDATA[6、宜昌通官方客户热线：<font color="#ff0000"><b>0717&#8211;1234567</b></font>]]></Data></string>
+  
+    <string name="bigCard_whyClick">为什么点击？</string>
+    <string name="bigCard_whyClick_dialog_title">温馨提示</string>
+    <string name="bigCard_whyClick_dialog_msg">带有NFC功能的手机可以通过贴卡的方式，检测您宜昌通卡的有效性，并读取当前余额，以避免手动输入的不准确和验证环节，给您带来的不便敬请谅解！</string>
+    <string name="bigCard_whyClick_dialog_ok">好的</string>
     <!-- NFC-bigCard -->
-
+	
+	<!-- NFC-bigCard-Init -->
+	<string name="bigCardInit_title">宜昌通普通卡充值</string>
+	<string name="bigCardInit_notice">请将宜昌通卡片&#x000A;紧贴手机NFC感应区</string>
+	<string name="bigCardInit_notice_error">请开启NFC后再试！</string>
+	<!-- NFC-bigCard-Init -->
 
     <!-- NFC-bigcard string -->
     <string name="CardType"> 卡种类:</string>

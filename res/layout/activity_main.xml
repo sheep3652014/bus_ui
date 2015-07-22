@@ -48,7 +48,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_toEndOf="@+id/img_error"
                 android:layout_toRightOf="@+id/img_error"
-                android:text="error"
+                android:text="@string/network_error"
                 android:textColor="@color/deep_gray"
                 android:textSize="@dimen/font_size_18" />
         </RelativeLayout>

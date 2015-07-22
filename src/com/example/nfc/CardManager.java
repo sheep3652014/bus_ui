@@ -67,7 +67,7 @@ public final class CardManager {
 
 	public static String load(Parcelable parcelable, Resources res) {
 		final Tag tag = (Tag) parcelable;
-
+		
 		final IsoDep isodep = IsoDep.get(tag);
 		if (isodep != null) {
 			return PbocCard.load(isodep, res);
