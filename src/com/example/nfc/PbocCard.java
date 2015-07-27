@@ -17,12 +17,18 @@ package com.example.nfc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
+import android.R.integer;
 import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.nfc.tech.IsoDep;
 import android.util.Log;
-import com.example.bus_ui_demo.R;
+
+import com.example.application.myApplication;
+import com.example.config.Global_Config;
+import com.example.nfc.Iso7816.Tag;
 
 
 public class PbocCard {
@@ -43,7 +49,7 @@ public class PbocCard {
 	protected final static byte TRANS_CSU = 6;
 	protected final static byte TRANS_CSU_CPX = 9;
 
-	protected String name;
+	/*protected String name;
 	protected String id;
 	protected String serl;
 	protected String version;
@@ -51,15 +57,31 @@ public class PbocCard {
 	protected String count;
 	protected String cash;
 	protected String log;
+	protected String common;
+	protected ArrayList<Map<String,String>> logList = new ArrayList<Map<String, String>>();
+	protected String circleInit;//圈存初始化信息
+	protected String circleStatus;//false 失败 true成功
+*/	
+	protected BigCardBean bean = new BigCardBean();
+	
+	private static final String CONSUME = Global_Config.CONSUME;
+	private static final String CONSUME_TYPE = Global_Config.CONSUME_TYPE;
+	private static final String CONSUME_TIME = Global_Config.CONSUME_TIME;
+	private static final String CONSUME_MONEY = Global_Config.CONSUME_MONEY;
+	
+	protected static final int INIT_STEP = Global_Config.INIT_STEP;
+	protected static final int CIRCLE_INIT_STEP = Global_Config.CIRCLE_INIT_STEP;
+	protected static final int CIRCLEING_STEP = Global_Config.CIRCLEING_STEP;
+	protected static final int CIRCLE_COMPELTE_STEP = Global_Config.CIRCLE_COMPELTE_STEP;
+	
 
-	public static String load(IsoDep tech, Resources res) {
+	/*public static String load(IsoDep tech, Resources res) {
 		final Iso7816.Tag tag = new Iso7816.Tag(tech);
 
 		tag.connect();
 
 		PbocCard card = null;
 
-		/*
 		do {
 			if ((card = ShenzhenTong.load(tag, res)) != null)
 				break;
@@ -81,20 +103,33 @@ public class PbocCard {
 				break;
 
 		} while (false);
-		*/
 		
-		do{
-			//if ((card = WuhanTong.loadCommon(tag, res)) != null)
-			if((card = YiChangTong.load(tag, res)) != null)
-				break;
-		}while(false);
 		
 		tag.close();
 		
 		return (card != null) ? card.toString(res) : null;
 	}
+*/
+	public static BigCardBean load(IsoDep tech, Resources res, myApplication myApp) {
+		final Iso7816.Tag tag = new Iso7816.Tag(tech);
 
-	protected PbocCard(Iso7816.Tag tag) {
+		tag.connect();
+
+		PbocCard card = null;
+
+		do{
+			//if ((card = WuhanTong.loadCommon(tag, res)) != null)
+			if((card = YiChangTong.load(tag, res, myApp)) != null)
+				break;
+		}while(false);
+		
+		tag.close();
+		
+		//return (card != null) ? card.toString(res) : null;
+		return (null != card) ? card.bean : null;
+	}
+	
+/*	protected PbocCard(Iso7816.Tag tag) {
 		id = tag.getID().toString();
 	}
 
@@ -118,10 +153,9 @@ public class PbocCard {
 		date = String.format("%02X%02X.%02X.%02X - %02X%02X.%02X.%02X", d[20],
 				d[21], d[22], d[23], d[24], d[25], d[26], d[27]);
 		count = null;
-	}
+	}*/
 
-	@SuppressLint("NewApi")
-	protected static boolean addLog(final Iso7816.Response r,
+	/*protected static boolean addLog(final Iso7816.Response r,
 			ArrayList<byte[]> l) {
 		if (!r.isOkey())
 			return false;
@@ -136,8 +170,37 @@ public class PbocCard {
 		}
 
 		return true;
-	}
+	}*/
+	
+	protected static Map<String,String> addLog(final Iso7816.Response r) {
+		
+		Map<String, String> map = new HashMap<String, String>();
+		
+		if (!r.isOkey())
+			return null;
 
+		final byte[] raw = r.getBytes();
+		final int N = raw.length - 23;
+		if (N < 0)
+			return null;
+
+//		0000――0001	2	HEX	联机或脱机交易序号
+//		0002――0004	3	HEX	透支限额
+//		0005――0008	4	HEX	交易金额
+//		0009――0009	1	HEX	交易类型标识
+//		0010――0015	6	HEX	交易终端编码（可为认证SAM卡号）
+//		0016――0027	7	BCD	终端交易时间（YYYYMMDDHHMMSS）
+		final int cash = Util.toInt(raw, 5, 4);
+		map.put(CONSUME_MONEY, ""+cash);
+		final int type = Util.toInt(raw, 9, 1);
+		map.put(CONSUME_TYPE, ""+type);
+		final String time = String.format("%02X%02X.%02X.%02X %02X:%02X:%02X ",
+				raw[16], raw[17], raw[18], raw[19], raw[20], raw[21],
+				raw[22]);
+		map.put(CONSUME_TIME, time);
+
+		return map;
+	}
 	
 	/*
 	protected static ArrayList<byte[]> readLog(Iso7816.Tag tag, int sfi) {
@@ -159,7 +222,7 @@ public class PbocCard {
 		return ret;
 	}
 	*/
-	protected static ArrayList<byte[]> readLog(Iso7816.Tag tag, int sfi) {
+	/*protected static ArrayList<byte[]> readLog(Iso7816.Tag tag, int sfi) {
 		final ArrayList<byte[]> ret = new ArrayList<byte[]>(MAX_LOG);
 		
 		//added by yh
@@ -189,9 +252,42 @@ public class PbocCard {
 		}
 
 		return ret;
+	}*/
+	
+	protected static ArrayList<Map<String, String>> readLog(Iso7816.Tag tag, int sfi) {
+		final ArrayList<Map<String, String>> ret = new ArrayList<Map<String, String>>();
+		
+		//added by yh
+		tag.getData();
+		
+		final Iso7816.Response rsp = tag.readRecord(sfi, 0);
+		
+		Log.d("tag from read record", "record sizes = "+rsp.size());
+		Log.d("tag from read record", "rsp = " + rsp.toString());
+		
+		
+		if (rsp.isOkey()) {
+			Map<String, String> map = new HashMap<String, String>();
+			map = addLog(rsp);
+			if(null != map)
+			{
+				ret.add(map);
+			}
+		} else {
+			for (int i = 1; i <= MAX_LOG; ++i) {
+				Map<String, String> map = new HashMap<String, String>();
+				map = addLog(tag.readRecord(sfi, i));
+				if (null == map)
+					break;
+				
+				ret.add(map);
+			}
+		}
+		
+		return ret;
 	}
 	
-	protected void parseLog(ArrayList<byte[]>... logs) {
+	/*protected void parseLog(ArrayList<byte[]>... logs) {
 		final StringBuilder r = new StringBuilder();
 
 		for (final ArrayList<byte[]> log : logs) {
@@ -227,9 +323,11 @@ public class PbocCard {
 		}
 
 		this.log = r.toString();
-	}
+	}*/
 
-	protected void parseBalance(Iso7816.Response data) {
+	
+	
+	/*protected void parseBalance(Iso7816.Response data) {
 		if (!data.isOkey() || data.size() < 4) {
 			cash = null;
 			return;
@@ -240,9 +338,14 @@ public class PbocCard {
 			n -= 0x80000000;
 
 		cash = Util.toAmountString(n / 100.0f);
-	}
+	}*/
 
-	protected String formatInfo(Resources res) {
+	
+	
+	
+	
+	
+/*	protected String formatInfo(Resources res) {
 		if (serl == null)
 			return null;
 
@@ -267,9 +370,9 @@ public class PbocCard {
 		}
 
 		return r.toString();
-	}
+	}*/
 
-	protected String formatLog(Resources res) {
+/*	protected String formatLog(Resources res) {
 		if (log == null || log.length() < 1)
 			return null;
 
@@ -298,5 +401,5 @@ public class PbocCard {
 		final String cash = formatBalance(res);
 
 		return CardManager.buildResult(name, info, cash, hist);
-	}
+	}*/
 }

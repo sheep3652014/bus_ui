@@ -1,5 +1,14 @@
 package com.example.bus_ui_demo;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Map;
+
+import javax.microedition.khronos.opengles.GL;
+
+import com.example.application.myApplication;
+import com.example.config.Global_Config;
+import com.example.nfc.BigCardBean;
 import com.example.nfc.CardManager;
 
 import android.annotation.SuppressLint;
@@ -22,6 +31,17 @@ import android.widget.TextView;
 
 public class aty_NFC_bigCard_Init extends Activity
 {
+	private static final String BEFORECHARGE_MONEY = Global_Config.BEFORECHARGE_MONEY;
+	private static final String AFTERCHARGE_MONEY = Global_Config.AFTERCHARGE_MONEY;
+	private static final String CONSUME = Global_Config.CONSUME;
+	private static final String CONSUME_TYPE = Global_Config.CONSUME_TYPE;
+	private static final String CONSUME_TIME = Global_Config.CONSUME_TIME;
+	private static final String CONSUME_MONEY = Global_Config.CONSUME_MONEY;
+	private static final String PUBLISHMSG = Global_Config.PUBLISHMSG;
+	private static final String PUBLISHCARDNO = Global_Config.PUBLISHCARDNO;
+	private static final String RANDOM = Global_Config.RANDOM;
+	private static final String LOGLIST = Global_Config.LOGLIST;
+	
 	private NfcAdapter nfcAdapter;
 	private PendingIntent pendingIntent;
 	private Resources res;
@@ -29,7 +49,8 @@ public class aty_NFC_bigCard_Init extends Activity
 	private TextView tv_NFC_help;
 	private ImageView iv_img;
 	
-	private Button btn_readCom, btn_CircleInit, btn_Circle;
+	private myApplication myApp = null;
+	private static final int REQUESTCODE = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -42,8 +63,6 @@ public class aty_NFC_bigCard_Init extends Activity
 		
 		FindView();
 		Init();
-		
-		InitTest();
 	}
 
 	private void FindView()
@@ -54,44 +73,6 @@ public class aty_NFC_bigCard_Init extends Activity
 		
 	}
 	
-	private void InitTest()
-	{
-		btn_readCom = (Button) findViewById(R.id.btn_readCom);
-		btn_CircleInit = (Button) findViewById(R.id.btn_CircleInit);
-		btn_Circle = (Button) findViewById(R.id.btn_Circle);
-	
-		btn_readCom.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		
-		btn_CircleInit.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		
-		btn_Circle.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				// TODO Auto-generated method stub
-				
-			}
-		});
-	}
 	
 	@Override
 	protected void onResume()
@@ -120,6 +101,7 @@ public class aty_NFC_bigCard_Init extends Activity
 	private void Init()
 	{
 		res = getResources();
+		myApp = (myApplication) getApplicationContext();
 		
 		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 		pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this,
@@ -128,6 +110,9 @@ public class aty_NFC_bigCard_Init extends Activity
 		onNewIntent(getIntent());
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onNewIntent(android.content.Intent)
+	 */
 	@Override
 	protected void onNewIntent(Intent intent)
 	{
@@ -137,8 +122,25 @@ public class aty_NFC_bigCard_Init extends Activity
 		final Parcelable p = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 		if(null != p)
 		{
+			BigCardBean bean = null;
 			System.out.println("got nfc tag");
-			CardManager.load(p, res);
+			if(null != (bean = CardManager.load(p, res, myApp)) )
+			{
+				System.out.println("here");
+				Intent data = new Intent();
+				Bundle bundle = new Bundle();
+				bundle.putString(PUBLISHCARDNO, bean.getPublishCardNO());
+				bundle.putString(PUBLISHMSG, bean.getPublishMsg());
+				bundle.putString(RANDOM, bean.getRandom());
+				bundle.putInt(BEFORECHARGE_MONEY, bean.getBeforeChargeMoney());
+				bundle.putSerializable(LOGLIST, (Serializable)bean.getListLog());//要求实现Serializable接口
+				data.putExtras(bundle);
+				System.out.println("--->"+bundle.toString()
+						+" data "+data.toString());
+				setResult(RESULT_OK, data);//需要设置返回码和返回数据，否则不生效
+				onActivityResult(REQUESTCODE, Activity.RESULT_OK , data);
+				aty_NFC_bigCard_Init.this.finish();
+			}
 		}
 		else
 			System.out.println("didn't find any nfc tag!");

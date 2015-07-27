@@ -58,6 +58,13 @@ public final class Util {
 		return ret;
 	}
 
+	/**
+	 * bytes to hex string
+	 * @param d bytes
+	 * @param s start position 
+	 * @param n transform length
+	 * @return
+	 */
 	public static String toHexString(byte[] d, int s, int n) {
 		final char[] ret = new char[n * 2];
 		final int e = s + n;

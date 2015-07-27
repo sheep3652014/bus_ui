@@ -1,5 +1,14 @@
 package com.example.bus_ui_demo;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import com.example.Alert.myAlert;
+import com.example.application.myApplication;
+import com.example.config.Global_Config;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -27,7 +36,18 @@ import android.support.v4.app.FragmentTransaction;
 
 public class aty_NFC_bigCard extends FragmentActivity
 {
-
+	private static final String BEFORECHARGE_MONEY = Global_Config.BEFORECHARGE_MONEY;
+	private static final String AFTERCHARGE_MONEY = Global_Config.AFTERCHARGE_MONEY;
+	private static final String CONSUME = Global_Config.CONSUME;
+	private static final String CONSUME_TYPE = Global_Config.CONSUME_TYPE;
+	private static final String CONSUME_TIME = Global_Config.CONSUME_TIME;
+	private static final String CONSUME_MONEY = Global_Config.CONSUME_MONEY;
+	private static final String PUBLISHMSG = Global_Config.PUBLISHMSG;
+	private static final String PUBLISHCARDNO = Global_Config.PUBLISHCARDNO;
+	private static final String RANDOM = Global_Config.RANDOM;
+	private static final String LOGLIST = Global_Config.LOGLIST;
+	
+	
 	private static final String TAG = "aty_NFC_bigCard";
 	private FrameLayout frame_bigCard;
 	
@@ -40,6 +60,11 @@ public class aty_NFC_bigCard extends FragmentActivity
 	private LinearLayout Lin_help;
 	private LinearLayout Lin_whyClick;
 	
+	private static final int REQUESTCODE = 0;//调用aty_NFC_bigCard_Init 请求码
+	private myApplication myApp;
+	
+	private static boolean isResultBack = false;//是否返回标志
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -49,10 +74,13 @@ public class aty_NFC_bigCard extends FragmentActivity
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.aty_nfc_bigcard_layout);
 		
+		myApp = (myApplication) getApplicationContext();
+		
 		FindView();
 		InitView();
 		
-		
+		if(!GetNFCStatus())
+			myAlert.ShowToast(aty_NFC_bigCard.this, getString(R.string.bigCardInit_notice_error));
 	}
 	
 	private void FindView()
@@ -117,11 +145,7 @@ public class aty_NFC_bigCard extends FragmentActivity
 		});
 		
 		frame_bigCard.setVisibility(View.GONE);//圈存测试后再显示
-		
-		fm = getSupportFragmentManager();
-		transaction = fm.beginTransaction();
-		transaction.replace(R.id.frame_bigCardInit, new frg_NFC_bigCard_SelectMoney());
-		transaction.commit();
+		//AddSeletMoneyFrame();
 		
 		ib_check.setOnClickListener(new OnClickListener()
 		{
@@ -131,8 +155,8 @@ public class aty_NFC_bigCard extends FragmentActivity
 			{
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(aty_NFC_bigCard.this, aty_NFC_bigCard_Init.class);
-				startActivity(intent);
-				
+				//startActivity(intent);
+				startActivityForResult(intent, REQUESTCODE);
 			}
 		});
 	}
@@ -164,6 +188,73 @@ public class aty_NFC_bigCard extends FragmentActivity
 		}
 		
 		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onActivityResult(int, int, android.content.Intent)
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		System.out.println("got request");
+		// TODO Auto-generated method stub
+		if(data==null)
+			System.out.println("data is null");
+		else
+			System.out.println("--" + data.toString());
+		if(REQUESTCODE == requestCode)
+		{
+			System.out.println("resultcode = "+resultCode + "_" + Activity.RESULT_OK);
+			if(Activity.RESULT_OK == resultCode)
+			{
+				
+				//解析记录
+//				bundle.putString(PUBLISHCARDNO, bean.getPublishCardNO());
+//				bundle.putString(PUBLISHMSG, bean.getPublishMsg());
+//				bundle.putString(RANDOM, bean.getRandom());
+//				bundle.putSerializable(LOGLIST, (Serializable)bean.getListLog());//要求实现Serializable接口
+				Bundle bundle = data.getExtras();//getIntent().getExtras();
+				System.out.println("--bundle is "+bundle.toString());
+				myApp.setPublishCardNO(bundle.getString(PUBLISHCARDNO));
+				myApp.setPublishMsg(bundle.getString(PUBLISHMSG));
+				myApp.setBeforeChargeMoney(bundle.getInt(BEFORECHARGE_MONEY));
+				myApp.setRandom(bundle.getString(RANDOM));
+				myApp.setListLog((ArrayList<Map<String, String>>)bundle.getSerializable(LOGLIST));
+				
+				frame_bigCard.setVisibility(View.VISIBLE);
+				frame_bigCard.invalidate();
+				Lin_help.setVisibility(View.GONE);
+				Lin_whyClick.setVisibility(View.GONE);
+				System.out.println("got request--");
+				
+				isResultBack = true;//设置返回标志
+			}
+		}
+		super.onActivityResult(requestCode, requestCode, data);
+	
+	}
+	
+	/**
+	 * 添加frg_NFC_bigCard_SelectMoney fragment
+	 */
+	private void AddSeletMoneyFrame()
+	{	
+		if(!isResultBack) return;//不是返回状态，退出
+		isResultBack = false;
+		
+		fm = getSupportFragmentManager();
+		transaction = fm.beginTransaction();
+		transaction.replace(R.id.frame_bigCardInit, new frg_NFC_bigCard_SelectMoney());
+		transaction.commit();
+	}
+
+	@Override
+	protected void onResume()
+	{
+		// TODO Auto-generated method stub
+		System.out.println("onresume");
+		AddSeletMoneyFrame();//恢复后再添加fragment，避免卡数据没更新
+		super.onResume();
 	}
 	
 	

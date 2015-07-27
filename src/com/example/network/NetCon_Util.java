@@ -1,8 +1,8 @@
 package com.example.network;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
 
 public class NetCon_Util
@@ -53,6 +53,16 @@ public class NetCon_Util
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * 网络故障，跳转至网络设置界面
+	 */
+	public static void setNetWorkConnect(Context context)
+	{
+		Intent intent = new Intent();
+		intent.setAction(android.provider.Settings.ACTION_WIRELESS_SETTINGS);
+		context.startActivity(intent);
 	}
 	
 }

@@ -25,7 +25,8 @@ import android.nfc.tech.IsoDep;
 import android.nfc.tech.NfcF;
 import android.nfc.tech.NfcV;
 import android.os.Parcelable;
-import com.example.bus_ui_demo.R;
+
+import com.example.application.myApplication;
 
 
 public final class CardManager {
@@ -65,7 +66,17 @@ public final class CardManager {
 		return s.append("<br/><br/>").toString();
 	}
 
-	public static String load(Parcelable parcelable, Resources res) {
+	public static BigCardBean load(Parcelable parcelable, Resources res, myApplication myApp) {
+		final Tag tag = (Tag) parcelable;
+		
+		final IsoDep isodep = IsoDep.get(tag);
+		if (isodep != null) {
+			return PbocCard.load(isodep, res, myApp);
+		}
+
+		return null;
+	}
+/*	public static String load(Parcelable parcelable, Resources res) {
 		final Tag tag = (Tag) parcelable;
 		
 		final IsoDep isodep = IsoDep.get(tag);
@@ -84,5 +95,5 @@ public final class CardManager {
 		}
 
 		return null;
-	}
+	}*/
 }

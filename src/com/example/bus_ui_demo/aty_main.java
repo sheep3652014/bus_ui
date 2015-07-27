@@ -3,6 +3,7 @@ package com.example.bus_ui_demo;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.Alert.myAlert;
 import com.example.config.Global_Config;
 import com.example.listview_main.listCard_Item;
 import com.example.listview_main.listCard_adapter;
@@ -10,12 +11,15 @@ import com.example.network.NetworkConnect_Service;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +30,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements OnItemClickListener
+public class aty_main extends Activity implements OnItemClickListener
 {
 	private static final String NetStatus = Global_Config.NETWORK_STATUS;
 	private static final String NETWORK_STATUS_ACTION = Global_Config.NETWORK_STATUS_ACTION;
@@ -72,9 +76,14 @@ public class MainActivity extends Activity implements OnItemClickListener
 		InitNetService();
 	}
 	
+	
+	/**
+	 * 初始化网络状态判断服务，并注册广播接收器
+	 * 根据网络状态设置网络状态提醒区域的可见性
+	 */
 	private void InitNetService()
 	{
-		NetworkConn_intent = new Intent(MainActivity.this, NetworkConnect_Service.class);
+		NetworkConn_intent = new Intent(aty_main.this, NetworkConnect_Service.class);
 		startService(NetworkConn_intent);
 		Networkreceiver = new BroadcastReceiver()
 		{
@@ -91,6 +100,7 @@ public class MainActivity extends Activity implements OnItemClickListener
 				else
 				{
 					Rel_NetStatus.setVisibility(View.VISIBLE);
+					myAlert.ShowToast(aty_main.this, getString(R.string.network_error_notice));
 				}
 			}
 		};
@@ -148,20 +158,20 @@ public class MainActivity extends Activity implements OnItemClickListener
 		{
 			case 0:
 				//bigcard
-				Intent intent0 = new Intent(MainActivity.this, aty_NFC_bigCard.class);
+				Intent intent0 = new Intent(aty_main.this, aty_NFC_bigCard.class);
 				startActivity(intent0);
 				//MainActivity.this.finish();
 				break;
 			case 1:
 				//swp-nfc
-				Toast.makeText(MainActivity.this, "swp-nfc", Toast.LENGTH_SHORT).show();
+				Toast.makeText(aty_main.this, "swp-nfc", Toast.LENGTH_SHORT).show();
 //				Intent intent1 = new Intent(MainActivity.this, cls);
 //				startActivity(intent1);
 //				MainActivity.this.finish();
 				break;
 			case 2:
 				//other
-				Toast.makeText(MainActivity.this, "other", Toast.LENGTH_SHORT).show();
+				Toast.makeText(aty_main.this, "other", Toast.LENGTH_SHORT).show();
 //				Intent intent2 = new Intent(MainActivity.this, cls);
 //				startActivity(intent2);
 //				MainActivity.this.finish();

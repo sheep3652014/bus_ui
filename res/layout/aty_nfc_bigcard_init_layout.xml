@@ -40,22 +40,4 @@
         android:layout_marginTop="20dp"
         />
     
-    <Button 
-        android:id="@+id/btn_readCom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="读公共信息"
-        />
-    <Button 
-        android:id="@+id/btn_CircleInit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="圈存初始化"
-        />
-    <Button 
-        android:id="@+id/btn_Circle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="圈存写卡"
-        />
 </LinearLayout>

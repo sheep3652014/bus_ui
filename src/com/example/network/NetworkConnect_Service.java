@@ -7,20 +7,38 @@ import com.example.config.Global_Config;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.res.Configuration;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 
+/**
+ * 网络通断服务，具有通断广播功能，也可以采用绑定的方式获取当前网络状态
+ * @author tom
+ *
+ */
 public class NetworkConnect_Service extends Service
 {
 
 	private static final String NETWORKSTATUS = Global_Config.NETWORK_STATUS;
 	private static final String NETWORK_STATUS_ACTION = Global_Config.NETWORK_STATUS_ACTION;
+	private static final long NETWORKCHECK_GAP = Global_Config.NETWORKCHECK_GAP;
 	
 	private static boolean NetStatus_now = true;
 	private static boolean NetStatus_before = false;
 	
+	private static boolean isNetConnect = false;//标记网络连接状态
+	public static NetworkConnect_Service myService = null;
 	
+	private final IBinder binder = new myBinder();
+	
+	public class myBinder extends Binder
+	{
+		public NetworkConnect_Service getService()
+		{
+			return NetworkConnect_Service.this;
+		}
+	}
+			
 	@Override
 	public void onCreate()
 	{
@@ -30,13 +48,6 @@ public class NetworkConnect_Service extends Service
 		super.onCreate();
 	}
 
-	@Override
-	public void onStart(Intent intent, int startId)
-	{
-		// TODO Auto-generated method stub
-		System.out.println("onstart");
-		super.onStart(intent, startId);
-	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
@@ -57,7 +68,9 @@ public class NetworkConnect_Service extends Service
 	public IBinder onBind(Intent intent)
 	{
 		// TODO Auto-generated method stub
-		return null;
+		//return null;
+		
+		return binder;
 	}
 
 	/**
@@ -72,6 +85,8 @@ public class NetworkConnect_Service extends Service
 			{
 				// TODO Auto-generated method stub
 				NetStatus_now = NetCon_Util.isNetConnect(getApplicationContext());
+				
+				setNetConnect(NetStatus_now);
 				
 				if( (NetStatus_before != NetStatus_now) || ((false == NetStatus_before) && (false == NetStatus_now)) )
 				{
@@ -88,7 +103,19 @@ public class NetworkConnect_Service extends Service
 		};
 		
 		Timer timer = new Timer();
-		timer.schedule(timerTask, 1000, 1*1000);
+		timer.schedule(timerTask, 1000, NETWORKCHECK_GAP);
+	}
+
+
+	public static boolean isNetConnect()
+	{
+		return isNetConnect;
+	}
+
+
+	public static void setNetConnect(boolean isNetConnect)
+	{
+		NetworkConnect_Service.isNetConnect = isNetConnect;
 	}
 
 	

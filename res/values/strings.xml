@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">bus_UI_demo</string>
+    <string name="app_name">宜昌掌上公交</string>
     <string name="hello_world">Hello world!</string>
-
+	<string name="YUAN">元</string>
+	<string name="consume_type1">消费</string>
+	<string name="consume_type2">复消</string>
+	<string name="consume_type3">充值</string>
+	
+    <!-- 启动界面 -->
+    <string name="app_start">手机天翼</string>
+    <string name="app_start_description">手机宜昌通天翼版客户端</string>
+    <!-- 启动界面 -->
+    
     <!-- 功能选择界面 -->
     <string name="funcation_select">功能选择</string>
     <string name="bigCard_funcation">普通公交卡</string>
@@ -13,6 +22,7 @@
     <string name="swpCard_funcation_Des">查询SWP-NFC卡余额，记录以及充值</string>
     <string name="other_funcation_Des">其它管理功能</string>
     <string name="network_error">网络故障，请检查网络！</string>
+    <string name="network_error_notice">网络故障，部分功能将无法使用！</string>
     <!-- 功能选择界面 -->
 
     <!-- NFC-bigCard -->
@@ -35,6 +45,11 @@
     <string name="bigCard_whyClick_dialog_title">温馨提示</string>
     <string name="bigCard_whyClick_dialog_msg">带有NFC功能的手机可以通过贴卡的方式，检测您宜昌通卡的有效性，并读取当前余额，以避免手动输入的不准确和验证环节，给您带来的不便敬请谅解！</string>
     <string name="bigCard_whyClick_dialog_ok">好的</string>
+    <string name="bigCard_payMethod">选择支付方式</string>
+    <string name="bigCard_publishCardNO">卡号：</string>
+    <string name="bigCard_money">余额：</string>
+    <string name="bigCard_readRecord">查看最近的10笔消费记录</string>
+    <string name="bigCard_youneedChoice">请选择充值金额!</string>
     <!-- NFC-bigCard -->
 	
 	<!-- NFC-bigCard-Init -->
@@ -42,6 +57,26 @@
 	<string name="bigCardInit_notice">请将宜昌通卡片&#x000A;紧贴手机NFC感应区</string>
 	<string name="bigCardInit_notice_error">请开启NFC后再试！</string>
 	<!-- NFC-bigCard-Init -->
+	
+	<!-- 充值方式选择页面 -->
+	<string name="company">武汉公用电子</string>
+	<string name="pay_money_notice">应付金额：</string>
+	<string name="pay_money">10.00元</string>
+	<string name="payMethod_notice">支付方式选择：</string>
+	<string name="payMethod_bestpay_notice">翼支付用户</string>
+	<string name="pay">确认付款</string>
+	<string name="bestpay_advertise1">吃穿行用住，乐享翼支付</string>
+	<string name="bestpay_advertise2">客服电话：4008011888</string>
+	<string name="paymethod_toast_notice">您选择的支付方式为：</string>
+	<string name="paymethod_need_select">请您选择一种充值方式！</string>
+	<!-- 充值方式选择页面 -->
+	
+	<!-- 充值申请界面 -->
+	<string name="PayRequest">申请充值中,请稍后……</string>
+	<string name="PayRequest2platfrom">向支付平台提交订单中，请稍后……</string>
+	<string name="ClickBackAgain">再按一次退出当前申请！</string>
+	<string name="ConnectServer_error">连接服务器出错，请配置网络后再试！</string>
+	<!-- 充值申请界面 -->
 
     <!-- NFC-bigcard string -->
     <string name="CardType"> 卡种类:</string>

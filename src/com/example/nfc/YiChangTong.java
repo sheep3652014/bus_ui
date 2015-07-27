@@ -18,14 +18,17 @@ package com.example.nfc;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.content.res.Resources;
+import android.nfc.Tag;
 import android.util.Log;
 
 import com.example.config.Global_Config;
 import com.example.nfc.Iso7816;
 import com.example.nfc.Util;
-import com.example.bus_ui_demo.R;
+import com.example.application.myApplication;
 
 
 final class YiChangTong extends PbocCard {
@@ -41,183 +44,164 @@ final class YiChangTong extends PbocCard {
 	private final static String AID = Global_Config.BIG_AID_YICHANG;
 	//圈存初始化命令
 	private final static String CIRCLE_INIT = Global_Config.CIRCLE_INIT;
+	public final static byte VERIFY_Lc = (byte)0x03;
+	public final static byte[] VERIFY_KEY = {(byte)0x12,(byte)0x34,(byte)0x56};
+	private final static String GET_RANDOM = Global_Config.GET_RANDOM;
 	
 	private YiChangTong(Iso7816.Tag tag, Resources res) {
-		super(tag);
-		name = res.getString(R.string.name_wht);
+		super();
+		//super(tag);
+		//name = res.getString(R.string.name_wht);
 	}
 	
-	@SuppressWarnings("unchecked")
-	final static YiChangTong load(Iso7816.Tag tag, Resources res) {
+	final static YiChangTong load(Iso7816.Tag tag, Resources res, myApplication myApp) {
 		
 		/*--------------------------------------------------------------*/
 		// select PSF (1PAY.SYS.DDF01)
 		/*--------------------------------------------------------------*/
 		if (tag.selectByName(DFN_PSE).isOkey()) {
 
-			Iso7816.Response SERL, INFO, CASH;
-
+			YiChangTong ret = new YiChangTong(tag, res);
 			
-			/*--------------------------------------------------------------*/
-			// read card info file, binary (5, 10)
-			/*--------------------------------------------------------------*/
-//			if (!(SERL = tag.readBinary(SFI_SERL)).isOkey())
-//				return null;
-//			
-//			if (!(INFO = tag.readBinary(SFI_INFO)).isOkey())
-//				return null;
-
-			CASH = tag.getBalance(true);
-			
-			//added by yh
-			//tag.getMoney();
-			System.out.println("1");
-			/*--------------------------------------------------------------*/
-			// select Main Application
-			/*--------------------------------------------------------------*/
-			//if (tag.selectByName(DFN_SRV).isOkey()) {
-			byte[] rsp1 = tag.transceive(Util.hexStringToBytes(AID));
-			String rspstr = Util.bytesToString(rsp1);
-			System.out.println("--rsp " + rspstr);
-			if(rspstr.contains("9000")){
-			//if (tag.selectByID(Util.hexStringToBytes(AID)).isOkey()) {
-				System.out.println("2");
-				/**
-				 * read 0x15 get city code , if the citycode == 4430 then is yichang card
-				 */
-				String comstr;
-				SERL = tag.readBinary(SFI_COM);
-				System.out.println("--"+Util.bytesToString(SERL.getBytes()));
-				if(!SERL.isOkey())
-					return null;
-				else {
-					comstr = Util.bytesToString(SERL.getBytes());
-					String citycode = comstr.substring(4, 8);
-					if(!citycode.equals(CITYCODE))
-						return null;
-				}
-				
-				System.out.println(comstr);
-				String comHead = comstr.substring(0, 72);
-				String solddate = comstr.substring(72, 80);
-				String comTail = comstr.substring(80);
-				String mycom = comHead + "55550505" + comTail;
-				byte[] rsp = tag.transceive(Util.hexStringToBytes("00d69500" + Integer.toHexString(mycom.length()) + mycom));
-				System.out.println("write 15 file ack " + Util.bytesToString(rsp));
-				SERL = tag.readBinary(SFI_COM);
-				System.out.println("after write " + Util.bytesToString(SERL.getBytes()));
-				
-				/*--------------------------------------------------------------*/
-				// read balance
-				/*--------------------------------------------------------------*/
-				if (!CASH.isOkey())
-					CASH = tag.getBalance(true);
-								
-				/*--------------------------------------------------------------*/
-				// read log file, record (24)
-				/*--------------------------------------------------------------*/
-				ArrayList<byte[]> LOG = readLog(tag, SFI_LOG);
-				
-				
-				/*--------------------------------------------------------------*/
-				// build result string
-				/*--------------------------------------------------------------*/
-				final YiChangTong ret = new YiChangTong(tag, res);
-				ret.parseBalance(CASH);
-				//ret.parseInfo(SERL, INFO);
-				ret.parseLog(LOG);
-				
-				return ret;
+			switch (myApp.getCircleStep())
+			{
+				case PbocCard.INIT_STEP:
+				default:	
+					//初始化
+					ret = getInit(tag, res, myApp);
+					break;
+				case PbocCard.CIRCLE_INIT_STEP:
+					//圈存初始化
+					ret = getCircleInit(tag, res, myApp);
+					break;
+				case PbocCard.CIRCLEING_STEP:
+					//圈存
+					ret = Circle(tag, res, myApp);
+					break;
 			}
+			
+			return ret; 
 		}
 
 		return null;
 	}
 	
-	
-	
-
-	/**
-	 * 读取余额和公共信息
-	 * @param tag
-	 * @param res
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	final static YiChangTong loadCommon(Iso7816.Tag tag, Resources res) {
+	final static YiChangTong getInit(Iso7816.Tag tag, Resources res,myApplication myApp)
+	{
+		Iso7816.Response SERL, INFO, CASH;
+		String random;
 		
+		CASH = tag.getBalance(true);
+		
+		System.out.println("1");
 		/*--------------------------------------------------------------*/
-		// select PSF (1PAY.SYS.DDF01)
+		// select Main Application
 		/*--------------------------------------------------------------*/
-		if (tag.selectByName(DFN_PSE).isOkey()) {
-//		if (tag.selectByID(com.hmbst.bestpaytest.Util.hexStringToBytes(AID_HUANGSHI)).isOkey()) {
-			
-			Iso7816.Response SERL, INFO, CASH;
-
-			System.out.println("--> loadCommon");
-			
-			//if (tag.selectByName(Util.hexStringToBytes(AID_HUANGSHI)).isOkey()) 
-			if (tag.selectByName(DFN_PSE).isOkey())
+		if (tag.TransRawByte(Util.hexStringToBytes(AID)).isOkey()) {
+			System.out.println("2");
+			/**
+			 * read 0x15 get city code , if the citycode == 4430 then is yichang card
+			 */
+			String comstr;
+			SERL = tag.readBinary(SFI_COM);
+			System.out.println("--"+Util.bytesToString(SERL.getBytes()));
+			if(!SERL.isOkey())
+				return null;
+			else {
+				comstr = Util.bytesToString(SERL.getBytes());
+				String citycode = comstr.substring(4, 8);
+				if(!citycode.equals(CITYCODE))
+					return null;
+			}
+			//初始化读取 余额  + 消费记录 + 公共信息
+			if (!CASH.isOkey())
+				CASH = tag.getBalance(true);
+					
+			//取随机数
+			if( (INFO = tag.TransRawByte(Util.hexStringToBytes(GET_RANDOM))).isOkey() ) 
 			{
-				
-				//个人密码校验
-//				final Iso7816.Response rsp1 = tag.Verify(WuhanTong.VERIFY_Lc, WuhanTong.VERIFY_KEY);
-				CASH = tag.getMoney();//tag.getBalance(true);
-				//float money = Util.Bytes2FloatMoney(CASH.getBytes());
-				//de.setBig_Money("" + money);
-				
-				INFO = tag.readBinary(SFI_COM);//读公共信息
-				String publicMsg = Util.bytesToString(INFO.getBytes());
-				//de.setBig_PublicMsg(publicMsg);
-				//de.setBig_PublishCardNO(publicMsg.substring(24, 40));//发行卡号截取
-				System.out.println("pulbic msg " + publicMsg);
-				//读记录
-				
-				Log.d("from loadtimes", "cash = "+Util.bytesToString(CASH.getBytes())+"__++++"+CASH.toString() + "___" + Util.bytesToString(INFO.getBytes()));
-				ArrayList<byte[]> LOG = readLog(tag, SFI_LOG);
-				
+				random = Util.toHexString(INFO.getBytes(), 0, INFO.getBytes().length-2);
 			}
-	   }	
+			else
+				random = null;
+			/*--------------------------------------------------------------*/
+			// read log file, record (24)
+			/*--------------------------------------------------------------*/
+			//读取记录前个人密码校验
+			final Iso7816.Response rsp1 = tag.Verify(VERIFY_Lc, VERIFY_KEY);
+			
+			if(!rsp1.isOkey())
+			{
+				Log.d("tag from read record", "readRecord is not Prepare");
+			}
+			ArrayList<Map<String, String>> listLog = readLog(tag, SFI_LOG);
+			
+			/*--------------------------------------------------------------*/
+			// build result string
+			/*--------------------------------------------------------------*/
+			final YiChangTong ret = new YiChangTong(tag, res);
+			//ret.parseBalance(CASH,myApp);
+			//ret.parseCommon(SERL,myApp);
+			//myApp.setListLog(listLog);
+			int before = Util.toInt(CASH.getBytes(), 0, 4);
+			if (before > 100000 || before < -100000)
+				before -= 0x80000000;
+			System.out.println("--money before " + before);
+			ret.bean.setBeforeChargeMoney(before);
+			String publishMsg = Util.toHexString(SERL.getBytes(), 0, SERL.getBytes().length-2);
+			System.out.println("-->"+publishMsg);
+			ret.bean.setPublishMsg(publishMsg);
+			ret.bean.setPublishCardNO(publishMsg.substring(24, 40));
+			System.out.println("-->"+publishMsg.substring(24, 40));
+			ret.bean.setRandom(random);
+			System.out.println("-->  "+random);
+			
+			ret.bean.setListLog(listLog);
+			System.out.println("-- "+listLog.toString());
+			
+			return ret;
+		}
 		return null;
-    }
+	}
 	
 	/**
-	 * 读取圈存初始化信息
+	 * 获取圈存初始化信息
 	 * @param tag
 	 * @param res
-	 * @param de
+	 * @param myApp
 	 * @return
 	 */
-	final static YiChangTong loadCircleInit(Iso7816.Tag tag, Resources res) {
+	final static YiChangTong getCircleInit(Iso7816.Tag tag, Resources res, myApplication myApp)
+	{
+		Iso7816.Response CircleInit, CASH;
 		
+		System.out.println("1--");
 		/*--------------------------------------------------------------*/
-		// select PSF (1PAY.SYS.DDF01)
+		// select Main Application
 		/*--------------------------------------------------------------*/
-		if (tag.selectByName(DFN_PSE).isOkey()) {
-//		if (tag.selectByID(com.hmbst.bestpaytest.Util.hexStringToBytes(AID_HUANGSHI)).isOkey()) {
-			
-			Iso7816.Response SERL, INFO, CASH , Init;
+		if (tag.TransRawByte(Util.hexStringToBytes(AID)).isOkey()) {
+			System.out.println("2--");
+			//cmd + 金额 + 终端号(可变)
+			//   	金额是8位16进制数字，单位：分。充1分钱，是00000001，
+			String circleInitCmd = CIRCLE_INIT + Integer.toHexString(myApp.getChargeMoney()) + myApp.getTerminalCode(); 
+			if((CircleInit = tag.TransRawByte(Util.hexStringToBytes(circleInitCmd)) ).isOkey())
+			{
+				final YiChangTong ret = new YiChangTong(tag, res);
+				
+				//if( (CASH = tag.getBalance(true)).isOkey() )//获取圈存后金额
+				{
+					
+					String initMsg = Util.toHexString(CircleInit.getBytes(), 0, CircleInit.getBytes().length-4);
 
-			System.out.println("-->loadCircleInit");
-			
-			if (tag.selectByName(Util.hexStringToBytes(AID)).isOkey()) {
-				
-//				805000020B01+czje+12345678   //cmd + 金额 + 终端号(可变)
-//				金额是8位16进制数字，分结尾。充1分钱，是00000001，
-//				String CircleInit = CIRCLE_INIT + Tools.string2HexString8(de.getCzje()) + OrderParams.getTerminal_Code();
-//				
-//				Init = tag.read(Util.hexStringToBytes(CircleInit));
-//				if(Init.isOkey())
-//				{
-//					byte[] bytes = Init.getBytes();
-//					de.setBigCard_CircleInit(Arrays.copyOfRange(bytes, 0, bytes.length-2));
-//				}
-				
-				
+					ret.bean.setCircleInitMsg(initMsg);
+					
+					return ret;
+				}
 			}
-	   }	
+		}
 		return null;
-    }
+	}
+
 	
 	/**
 	 * 圈存写
@@ -226,46 +210,38 @@ final class YiChangTong extends PbocCard {
 	 * @param de
 	 * @return
 	 */
-	final static YiChangTong loadCircleWrite(Iso7816.Tag tag, Resources res) {
+	final static YiChangTong Circle(Iso7816.Tag tag, Resources res, myApplication myApp)
+	{
+		Iso7816.Response Circle, CASH;
 		
+		System.out.println("--1");
 		/*--------------------------------------------------------------*/
-		// select PSF (1PAY.SYS.DDF01)
+		// select Main Application
 		/*--------------------------------------------------------------*/
-		if (tag.selectByName(DFN_PSE).isOkey()) {
-//		if (tag.selectByID(com.hmbst.bestpaytest.Util.hexStringToBytes(AID_HUANGSHI)).isOkey()) {
+		if (tag.TransRawByte(Util.hexStringToBytes(AID)).isOkey()) {
+			System.out.println("--2");
 			
-			Iso7816.Response SERL, INFO, CASH , Ack;
-
-			System.out.println("-->loadCircleInit");
-			
-			if (tag.selectByName(Util.hexStringToBytes(AID)).isOkey()) {
+			String cmd = myApp.getBigCard_CircleCmd();
+			if((Circle = tag.TransRawByte(Util.hexStringToBytes(cmd)) ).isOkey())
+			{
+				final YiChangTong ret = new YiChangTong(tag, res);
 				
-//				Ack = tag.read(de.getBigCard_CircleCMD());
-//				if(Ack.isOkey())
-//				{
-//					//写卡成功 读取金额 比对 写入是否正确
-//					CASH = tag.getBalance(true);
-//					float after = Util.Bytes2FloatMoney(CASH.getBytes()) *100;
-//					float before = Float.parseFloat(de.getBig_Money()) * 100;
-//					float charge = Float.parseFloat(OrderParams.getChargeMoney()) * 100;
-//					
-//					if(0 == (after - before - charge))
-//					{
-//						//圈存成功
-//					}
-//					
-//					
-//				}
+				CASH = tag.getBalance(true);
+				int after = Util.toInt(CASH.getBytes(), 0, 4);
+				if (after > 100000 || after < -100000)
+					after -= 0x80000000;
+				//比较金额确认是否圈存完成
+				ret.bean.setAfterChargeMoney(after);
 				
-				
+				return ret;
 			}
-	   }	
+		}
+		
 		return null;
-    }
+	}
 	
 	
-	
-	private void parseInfo(Iso7816.Response sn, Iso7816.Response info) {
+	/*private void parseInfo(Iso7816.Response sn, Iso7816.Response info) {
 		if (sn.size() < 27 || info.size() < 27) {
 			serl = version = date = count = null;
 			return;
@@ -277,5 +253,8 @@ final class YiChangTong extends PbocCard {
 		date = String.format("%02X%02X.%02X.%02X - %02X%02X.%02X.%02X", d[20],
 				d[21], d[22], d[23], d[16], d[17], d[18], d[19]);
 		count = null;
-	}
+	}*/
+	
+	
+	
 }

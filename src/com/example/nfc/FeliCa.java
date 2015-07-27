@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import android.nfc.tech.NfcF;
 import com.example.nfc.Util;
-import com.example.bus_ui_demo.R;
 
 
 public class FeliCa {

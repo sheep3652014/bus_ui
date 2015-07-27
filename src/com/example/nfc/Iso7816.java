@@ -21,7 +21,6 @@ import java.util.Arrays;
 import android.nfc.tech.IsoDep;
 import android.util.Log;
 import com.example.nfc.Util;
-import com.example.bus_ui_demo.R;
 
 
 
@@ -372,7 +371,11 @@ public class Iso7816 {
 					(byte) 0x04, // Le
 			};
 
-			return new Response(transceive(cmd));
+			//return new Response(transceive(cmd));
+			Response response = new Response(transceive(cmd));
+			
+			System.out.println("money " + response.toString() + "_" +Util.toHexString(response.getBytes(), 0, response.getBytes().length));
+			return response;
 		}
 
 		//added by yh
@@ -560,7 +563,22 @@ public class Iso7816 {
 			Response rs = new Response(transceive(buff.array()));
 			return rs;
 		}
-
+		
+		/**
+		 * add by yh 20150723 
+		 * 用于发送原始PBOC指令
+		 * @param cmd
+		 * @return
+		 */
+		public Response TransRawByte(byte... cmd)
+		{
+			ByteBuffer buff = ByteBuffer.allocate(cmd.length + 6);
+			buff.put(cmd); //raw command
+			
+			Response rs = new Response(transceive(buff.array()));
+			return rs;
+		}
+		
 		public void connect() {
 			try {
 				nfcTag.connect();
