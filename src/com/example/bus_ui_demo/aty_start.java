@@ -3,6 +3,7 @@ package com.example.bus_ui_demo;
 import com.example.application.myApplication;
 import com.example.config.Global_Config;
 
+import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -58,6 +59,15 @@ public class aty_start extends Activity
 		TelephonyManager tm = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
 		
 		IMEI = tm.getDeviceId();
+		int len = IMEI.length();
+		if(len < 15)
+		{
+			for(int i = 0; i < (15-len); i++)
+			{
+				IMEI = IMEI + "0";
+			}
+		}
+		System.out.println("imei = "+IMEI);
 		return IMEI;
 	}
 }

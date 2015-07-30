@@ -35,11 +35,11 @@
     <!-- <string name="bigCard_help_3">3、充值=支付+圈存，请勿中途退出</string> -->
     <string name="bigCard_help_3">
         <Data><![CDATA[3、<font color="#ff0000"><b>充值=支付+圈存</b></font>，请勿中途退出]]></Data></string>
-    <string name="bigCard_help_4">4、第一次使用时需进行圈存测试，不兼容手机会提示圈存失败</string>
-    <string name="bigCard_help_5">5、暂不能提供发票</string>
+    <!-- <string name="bigCard_help_4">4、第一次使用时需进行圈存测试，不兼容手机会提示圈存失败</string> -->
+    <string name="bigCard_help_5">4、暂不能提供发票</string>
     <!-- <string name="bigCard_help_6">6、以传统官方客户热线：0717&#8211;1234567</string> -->
     <string name="bigCard_help_6">
-        <Data><![CDATA[6、宜昌通官方客户热线：<font color="#ff0000"><b>0717&#8211;1234567</b></font>]]></Data></string>
+        <Data><![CDATA[5、宜昌通官方客户热线：<font color="#ff0000"><b>0717&#8211;1234567</b></font>]]></Data></string>
   
     <string name="bigCard_whyClick">为什么点击？</string>
     <string name="bigCard_whyClick_dialog_title">温馨提示</string>
@@ -69,15 +69,45 @@
 	<string name="bestpay_advertise2">客服电话：4008011888</string>
 	<string name="paymethod_toast_notice">您选择的支付方式为：</string>
 	<string name="paymethod_need_select">请您选择一种充值方式！</string>
+	<string name="BestPay_account_error">翼支付账号输入错误，请重新输入！</string>
 	<!-- 充值方式选择页面 -->
+	
+	<!-- 圈存提示界面 -->
+	<string name="bigCard_circle_notice">步骤二：点击下方按钮，在弹框出现后将宜昌通卡贴于手机NFC天线处，即开始圈存，没有提示前请不要移动公交卡，以防圈存失败。</string>
+	<!-- 圈存提示界面 -->
 	
 	<!-- 充值申请界面 -->
 	<string name="PayRequest">申请充值中,请稍后……</string>
+	<string name="PayRequest_error">申请充值失败!\n 1、检查网络；\n 2、联系宜昌掌上公交客服；\n</string>
 	<string name="PayRequest2platfrom">向支付平台提交订单中，请稍后……</string>
 	<string name="ClickBackAgain">再按一次退出当前申请！</string>
 	<string name="ConnectServer_error">连接服务器出错，请配置网络后再试！</string>
+	<string name="Dialog_title">提示</string>
+	<string name="Dialog_onButton_Content">好的</string>
+	<string name="BestPay_PayFail">翼支付支付失败，将返回主界面！</string>
+	<string name="RequestCirlce_fail">申请指令失败，即将返回主界面！</string>
+	<string name="RequestCirlce_success">申请指令成功，即将跳转至圈存界面！</string>
 	<!-- 充值申请界面 -->
 
+	<!-- 圈存完成提示界面 -->
+	<!-- <string name="circle_complete_title">圈存写卡完成</string> -->
+	<string name="circle_complete_notice">圈存完成</string>
+	<string name="circle_complete_before">圈存前金额</string>
+	<string name="circle_complete_before_money">1.00元</string>
+	<string name="circle_complete_charge">圈存金额</string>
+	<string name="circle_complete_charge_money">1.00元</string>
+	<string name="circle_complete_after">圈存后金额</string>
+	<string name="circle_complete_after_money">2.00元</string>
+	<string name="btn_back_main">返回首页</string>
+	<string name="btn_back_NFC_bigCard">返回读卡界面</string>
+	<string name="circleing">圈存中，请勿移动公交卡，否则可能导致圈存失败！</string>
+	<string name="circle_success">圈存成功，可以拿开公交卡</string>
+	<string name="circle_fail">圈存失败，即将返回首页</string>
+	<string name="circle_report_success">圈存状态上报成功，即将返回首页</string>
+	<string name="circle_report_fail">圈存状态上报失败，即将返回首页</string>
+	<string name="circle_fail_notice">圈存失败，您可以联系公交客服，进行退款!</string>
+	<!-- 圈存完成提示界面 -->
+	
     <!-- NFC-bigcard string -->
     <string name="CardType"> 卡种类:</string>
     <string name="Consume_times">剩余消费次数:</string>

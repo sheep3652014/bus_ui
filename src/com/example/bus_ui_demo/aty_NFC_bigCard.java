@@ -46,7 +46,12 @@ public class aty_NFC_bigCard extends FragmentActivity
 	private static final String PUBLISHCARDNO = Global_Config.PUBLISHCARDNO;
 	private static final String RANDOM = Global_Config.RANDOM;
 	private static final String LOGLIST = Global_Config.LOGLIST;
+	private static final String CIRCLEINIT_MSG = Global_Config.CICLEINIT_MSG;
 	
+	public static final int INIT_STEP = 0;
+	public static final int CIRCLE_INIT_STEP = 1;
+	public static final int CIRCLEING_STEP = 2;
+	public static final int CIRCLE_COMPELTE_STEP = 3;
 	
 	private static final String TAG = "aty_NFC_bigCard";
 	private FrameLayout frame_bigCard;
@@ -156,6 +161,7 @@ public class aty_NFC_bigCard extends FragmentActivity
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(aty_NFC_bigCard.this, aty_NFC_bigCard_Init.class);
 				//startActivity(intent);
+				myApp.setCircleStep(INIT_STEP);
 				startActivityForResult(intent, REQUESTCODE);
 			}
 		});
@@ -220,7 +226,6 @@ public class aty_NFC_bigCard extends FragmentActivity
 				myApp.setBeforeChargeMoney(bundle.getInt(BEFORECHARGE_MONEY));
 				myApp.setRandom(bundle.getString(RANDOM));
 				myApp.setListLog((ArrayList<Map<String, String>>)bundle.getSerializable(LOGLIST));
-				
 				frame_bigCard.setVisibility(View.VISIBLE);
 				frame_bigCard.invalidate();
 				Lin_help.setVisibility(View.GONE);
@@ -231,7 +236,7 @@ public class aty_NFC_bigCard extends FragmentActivity
 			}
 		}
 		super.onActivityResult(requestCode, requestCode, data);
-	
+		
 	}
 	
 	/**

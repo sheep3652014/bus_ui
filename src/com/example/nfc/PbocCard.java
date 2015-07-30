@@ -22,12 +22,15 @@ import java.util.Map;
 
 import android.R.integer;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.res.Resources;
 import android.nfc.tech.IsoDep;
+import android.os.Handler;
 import android.util.Log;
 
 import com.example.application.myApplication;
 import com.example.config.Global_Config;
+import com.example.network.PayParams;
 import com.example.nfc.Iso7816.Tag;
 
 
@@ -62,7 +65,7 @@ public class PbocCard {
 	protected String circleInit;//圈存初始化信息
 	protected String circleStatus;//false 失败 true成功
 */	
-	protected BigCardBean bean = new BigCardBean();
+	public BigCardBean bean = new BigCardBean();
 	
 	private static final String CONSUME = Global_Config.CONSUME;
 	private static final String CONSUME_TYPE = Global_Config.CONSUME_TYPE;
@@ -71,8 +74,8 @@ public class PbocCard {
 	
 	protected static final int INIT_STEP = Global_Config.INIT_STEP;
 	protected static final int CIRCLE_INIT_STEP = Global_Config.CIRCLE_INIT_STEP;
-	protected static final int CIRCLEING_STEP = Global_Config.CIRCLEING_STEP;
-	protected static final int CIRCLE_COMPELTE_STEP = Global_Config.CIRCLE_COMPELTE_STEP;
+	//protected static final int CIRCLEING_STEP = Global_Config.CIRCLEING_STEP;
+	//protected static final int CIRCLE_COMPELTE_STEP = Global_Config.CIRCLE_COMPELTE_STEP;
 	
 
 	/*public static String load(IsoDep tech, Resources res) {
@@ -110,7 +113,7 @@ public class PbocCard {
 		return (card != null) ? card.toString(res) : null;
 	}
 */
-	public static BigCardBean load(IsoDep tech, Resources res, myApplication myApp) {
+	public static BigCardBean load(IsoDep tech, Resources res, myApplication myApp, Context context,Handler mHandler) {
 		final Iso7816.Tag tag = new Iso7816.Tag(tech);
 
 		tag.connect();
@@ -119,13 +122,12 @@ public class PbocCard {
 
 		do{
 			//if ((card = WuhanTong.loadCommon(tag, res)) != null)
-			if((card = YiChangTong.load(tag, res, myApp)) != null)
+			if((card = YiChangTong.load(tag, res, myApp, context, mHandler)) != null)
 				break;
 		}while(false);
 		
-		tag.close();
+		//tag.close();//此处必须关闭，避免多线程切换时，后续NFC操作还没完成，从而导致错误
 		
-		//return (card != null) ? card.toString(res) : null;
 		return (null != card) ? card.bean : null;
 	}
 	

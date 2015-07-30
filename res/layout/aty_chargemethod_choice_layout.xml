@@ -118,6 +118,7 @@
             android:background="@drawable/mm_edit_normal"
             android:hint="13400006063"
             android:textSize="@dimen/font_size_16" 
+            android:textColor="@color/black"
             android:inputType="phone"
             />
 
@@ -129,6 +130,7 @@
             android:background="@drawable/mm_edit_normal"
             android:ems="6"
             android:inputType="textPassword" 
+            android:visibility="gone"
             >
         </EditText>
     </LinearLayout>

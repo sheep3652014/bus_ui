@@ -1,6 +1,7 @@
 package com.example.network;
 
 import com.example.bus_ui_demo.R.string;
+import com.example.config.Global_Config;
 
 public class PayParams
 {
@@ -20,17 +21,20 @@ public class PayParams
 //	version	1	N	软件版本号
 //	Phone	11	N	手机号 //swp卡绑定时使用
 
-	public static final String CARD_NUMBER = "cardNO";
-	public static final String IMEI_NO = "imei";
-	public static final String ORDERNO = "orderNO";
-	public static final String ORDERSEQ = "orderSeq";
-	public static final String ORDER_AMOUNT = "orderAmount";
-	public static final String OLDAMOUNT = "oldAmount";
-	public static final String PUBLEN = "pubLen";
-	public static final String PUBLIC_DATA = "publicdata";
-	public static final String PAYTYPE = "payType";
-	public static final String SOFTVERSION = "softversion";
-	public static final String PHONENO = "phoneNO";
+	public static final String CARD_NUMBER = Global_Config.CARD_NUMBER;//"cardNO";
+	public static final String PHYSICS_CARDNO = Global_Config.PHYSICS_CARDNO;//"physics_cardNO";
+	public static final String IMEI_NO = Global_Config.IMEI_NO;//"imei";
+	public static final String ORDERNO = Global_Config.ORDERNO;//"orderNO";
+	public static final String ORDERSEQ = Global_Config.ORDERSEQ;//"orderSeq";
+	public static final String ORDER_AMOUNT = Global_Config.ORDER_AMOUNT;//"orderAmount";
+	public static final String OLDAMOUNT = Global_Config.OLDAMOUNT;//"oldAmount";
+	public static final String PUBLEN = Global_Config.PUBLEN;//"pubLen";
+	public static final String PUBLIC_DATA = Global_Config.PUBLIC_DATA;//"publicdata";
+	public static final String PAYTYPE = Global_Config.PAYTYPE;//"payType";
+	public static final String SOFTVERSION = Global_Config.SOFTVERSION;//"softversion";
+	public static final String PHONENO = Global_Config.PHONENO;//"phoneNO";
+	public static final String CIRCLEINIT_DATA = Global_Config.CIRCLEINIT_DATA;//"circleinit";
+	public static final String TAC_CARD = Global_Config.TAC_CARD;//"tac";
 	
 	private String Card_number;
 	private String IMEI;

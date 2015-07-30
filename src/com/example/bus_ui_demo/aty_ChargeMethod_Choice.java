@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import com.example.Alert.myAlert;
 import com.example.application.myApplication;
+import com.example.bestpay.OrderParams;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -81,14 +82,20 @@ public class aty_ChargeMethod_Choice extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				if(AdapterView.INVALID_POSITION != Spinner_choice.getSelectedItemPosition())
+				if( (AdapterView.INVALID_POSITION != Spinner_choice.getSelectedItemPosition())
+					&& (11 == et_PhoneNO.getText().toString().length()) )
 				{
+					OrderParams.setAccountID(et_PhoneNO.getText().toString());//保存翼支付账户
 					Intent intent = new Intent(aty_ChargeMethod_Choice.this, aty_PopRequestPay.class);
 					startActivity(intent);
 				}
-				else
+				else if(AdapterView.INVALID_POSITION == Spinner_choice.getSelectedItemPosition())
 				{
 					myAlert.ShowToast(aty_ChargeMethod_Choice.this, getString(R.string.paymethod_need_select));
+				}
+				else if( (et_PhoneNO.getText().toString().isEmpty()) ||(et_PhoneNO.getText().toString().length() < 11))
+				{
+					myAlert.ShowToast(aty_ChargeMethod_Choice.this, getString(R.string.BestPay_account_error));
 				}
 			}
 		});
@@ -125,17 +132,9 @@ public class aty_ChargeMethod_Choice extends Activity
 		});
 	}
 	
-	/**
-	 * 根据选择的充值方式，提交对应的充值申请
-	 * @param choice
-	 */
-	private void RequestPaybyChoice(int choice)
-	{
-		
-	}
 	
 	/**
-	 * 所选择支付方式的开通提醒
+	 * 所选择支付方式的开通提醒,当选择不支持的支付方式时，将付款按钮变为不可见
 	 * @param choice
 	 */
 	private void PayMethodNotice(final int choice)
@@ -150,18 +149,23 @@ public class aty_ChargeMethod_Choice extends Activity
 			case 0://翼支付
 			default:
 				
+				btn_next.setVisibility(View.VISIBLE);
 				break;
 			case 1://支付宝
 				myAlert.ShowToast(aty_ChargeMethod_Choice.this, "暂不支持");
+				btn_next.setVisibility(View.GONE);
 				break;	
 			case 2://建行
 				myAlert.ShowToast(aty_ChargeMethod_Choice.this, "暂不支持");
+				btn_next.setVisibility(View.GONE);
 				break;
 			case 3://工行
 				myAlert.ShowToast(aty_ChargeMethod_Choice.this, "暂不支持");
+				btn_next.setVisibility(View.GONE);
 				break;
 			case 4://农行
 				myAlert.ShowToast(aty_ChargeMethod_Choice.this, "暂不支持");
+				btn_next.setVisibility(View.GONE);
 				break;
 			
 		}

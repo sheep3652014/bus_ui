@@ -332,7 +332,16 @@ public class Iso7816 {
 			nfcTag = tag;
 			id = new ID(tag.getTag().getId());
 		}
-
+		
+		/**
+		 * add by yh 用于返回初始化 Iso7816.Tag的IsoDep 实例
+		 * @return IsoDep实例
+		 */
+		public IsoDep getIsoDep_Tag()
+		{
+			return nfcTag;
+		}
+		
 		public ID getID() {
 			return id;
 		}
@@ -570,12 +579,17 @@ public class Iso7816 {
 		 * @param cmd
 		 * @return
 		 */
-		public Response TransRawByte(byte... cmd)
+		public Response TransRawByte(byte[] cmd)//(byte... cmd)
 		{
-			ByteBuffer buff = ByteBuffer.allocate(cmd.length + 6);
-			buff.put(cmd); //raw command
-			
-			Response rs = new Response(transceive(buff.array()));
+			//ByteBuffer buff = ByteBuffer.allocate(cmd.length + 6);
+			//buff.put(cmd); //raw command
+			//Response rs = new Response(transceive(buff.array()));
+			Response rs = new Response(transceive(cmd));
+			byte[] bys = new byte[2];
+			bys[0]=rs.getSw1();
+			bys[1]=rs.getSw2();
+			System.out.println("circle "+Util.bytesToString(cmd) + "_"+ Util.bytesToString(rs.getBytes())+"_"+
+			Util.bytesToString(bys));
 			return rs;
 		}
 		

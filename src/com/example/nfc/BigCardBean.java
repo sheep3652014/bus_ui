@@ -13,6 +13,7 @@ public class BigCardBean
 	private int BeforeChargeMoney;//充值前金额 单位分
 	private int AfterChargeMoney;//充值后金额 单位分
 	private List<Map<String, String>> listLog = new ArrayList<Map<String,String>>();
+	private String TAC_CARD;//卡圈存正确返回的TAC码
 	
 	public BigCardBean()
 	{
@@ -150,6 +151,23 @@ public class BigCardBean
 	public void setPublishCardNO(String publishCardNO)
 	{
 		PublishCardNO = publishCardNO;
+	}
+	
+	/**
+	 * 获取圈存正确返回的TAC码，长度：4byte
+	 * @return TAC码
+	 */
+	public String getTAC_CARD()
+	{
+		return TAC_CARD;
+	}
+	/**
+	 * 设置圈存正确返回的TAC码，长度：4byte
+	 * @param tAC_CARD
+	 */
+	public void setTAC_CARD(String tAC_CARD)
+	{
+		TAC_CARD = tAC_CARD;
 	}
 
 }

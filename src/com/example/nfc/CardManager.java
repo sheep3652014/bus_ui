@@ -17,6 +17,7 @@ package com.example.nfc;
 
 
 
+import android.content.Context;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.nfc.NfcAdapter;
@@ -24,6 +25,7 @@ import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
 import android.nfc.tech.NfcF;
 import android.nfc.tech.NfcV;
+import android.os.Handler;
 import android.os.Parcelable;
 
 import com.example.application.myApplication;
@@ -66,12 +68,14 @@ public final class CardManager {
 		return s.append("<br/><br/>").toString();
 	}
 
-	public static BigCardBean load(Parcelable parcelable, Resources res, myApplication myApp) {
+	public static BigCardBean load(Parcelable parcelable, Resources res, myApplication myApp, Context context,Handler mHandler) {
 		final Tag tag = (Tag) parcelable;
 		
 		final IsoDep isodep = IsoDep.get(tag);
+		System.out.println("tag id = " +Util.bytesToString(isodep.getTag().getId())); //ŒÔ¿Ìø®∫≈
+		myApp.setPhysicsCardNO(Util.toHexStringR(isodep.getTag().getId(), 0, isodep.getTag().getId().length));
 		if (isodep != null) {
-			return PbocCard.load(isodep, res, myApp);
+			return PbocCard.load(isodep, res, myApp, context, mHandler);
 		}
 
 		return null;

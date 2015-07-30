@@ -143,5 +143,25 @@ public final class Util {
 		
 		return sb.toString();
 	}
-	
+
+	/**
+	 * 将字符串小于8位的补齐为8位，补齐方法：左补零
+	 * @param str
+	 * @return
+	 */
+	public static String to8String(String str)
+	{	
+		final int strlen = str.length();
+		System.out.println("--before "+str +"_"+str.length());
+		if(str.length() < 8)
+		{
+			for(int i = 0; i < (8-strlen); i++)
+			{	
+				str = "0"+str;
+			}
+		}
+		
+		System.out.println("--after "+str+"_"+str.length());
+		return str;
+	}
 }

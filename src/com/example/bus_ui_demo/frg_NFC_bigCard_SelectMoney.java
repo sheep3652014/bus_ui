@@ -109,6 +109,7 @@ public class frg_NFC_bigCard_SelectMoney extends Fragment
 			{
 				// TODO Auto-generated method stub
 				isSelect = true;
+				myApp.setMoneyPosition(position);
 				switch (position)
 				{
 					case 0:
