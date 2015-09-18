@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:background="@drawable/lightgray_background"
+    style="@style/marginStyle"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    >
+    
+    <TextView 
+        android:id="@+id/tv_money" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="金额：1.00元"
+        />
+	<TextView 
+	    android:id="@+id/tv_OrderNO" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="订单号：201508162053101234abcdabcdabcd"
+	    />
+	<TextView 
+	    android:id="@+id/tv_OrderTime" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="订单时间：20150816"
+	    />
+	<TextView 
+	    android:id="@+id/tv_BankID" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="银行卡号：6226220012341234678"
+	    />
+	
+</LinearLayout>

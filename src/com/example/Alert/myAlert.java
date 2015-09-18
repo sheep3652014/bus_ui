@@ -1,10 +1,13 @@
 package com.example.Alert;
 
+import java.net.InterfaceAddress;
+
 import com.example.bus_ui_demo.R;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.StaticLayout;
 import android.widget.Toast;
 
 public class myAlert
@@ -46,5 +49,55 @@ public class myAlert
 	public static interface ShowOneClickDialog_Interface
 	{
 		public void DoSomething();
+	}
+	
+	/**
+	 * 显示两按钮提示框
+	 * @param context
+	 * @param content 提示内容
+	 * @param negative 按钮文字
+	 * @param positive 按钮文字
+	 * @param myInterface 两按钮提示框点击事件接口
+	 */
+	public static void ShowTwoClickDialog(Context context, String content, String negative, String positive,
+			final ShowTwoClickDialog_Interface myInterface)
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setTitle(context.getString(R.string.Dialog_title));
+		builder.setMessage(content);
+		builder.setNegativeButton(negative, new DialogInterface.OnClickListener()
+		{
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				// TODO Auto-generated method stub
+				myInterface.DoNegative();
+			}
+		});
+		
+		builder.setPositiveButton(positive, new DialogInterface.OnClickListener()
+		{
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				// TODO Auto-generated method stub
+				myInterface.DoPositive();
+			}
+		});
+		builder.create();
+		builder.show();
+	}
+	
+	/**
+	 * 两按钮提示框点击事件接口
+	 * @author tom
+	 *
+	 */
+	public static interface ShowTwoClickDialog_Interface
+	{
+		public void DoPositive();
+		public void DoNegative();
 	}
 }

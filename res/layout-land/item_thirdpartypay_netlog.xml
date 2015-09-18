@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/marginleftRightStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:background="@drawable/lightgray_background"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/tianyi_m" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="vertical" 
+            android:paddingLeft="5dp"
+    		android:paddingRight="5dp"
+            >
+
+            <TextView
+                android:id="@+id/tv_OrderNO"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/OrderNO_head" />
+
+            <TextView
+                android:id="@+id/tv_PublishCardNO"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/PublishcardID_head" />
+
+            <TextView
+                android:id="@+id/tv_OrderMoney"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sample_money" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

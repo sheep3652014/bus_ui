@@ -9,8 +9,12 @@ import com.example.bestpay.OrderParams;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -19,22 +23,26 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class aty_ChargeMethod_Choice extends Activity
+public class aty_ChargeMethod_Choice extends FragmentActivity
 {
-	private EditText et_PhoneNO;
+	/*private EditText et_PhoneNO;
 	private EditText et_Password;
-	private Button btn_next;
-	private Spinner Spinner_choice;
 	private LinearLayout Lin_bestpay;
+	private Button btn_next;*/
+	private Spinner Spinner_choice;
 	private TextView tv_chargeMoney;
+	private FrameLayout frame_payMethod;
 	
 	private static String[] payMethods;
 	
 	private myApplication myApp;
+	private FragmentManager fm;
+	private FragmentTransaction transaction;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -42,7 +50,8 @@ public class aty_ChargeMethod_Choice extends Activity
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		setContentView(R.layout.aty_chargemethod_choice_layout);
 		
 		payMethods = getResources().getStringArray(R.array.payMethod);
@@ -55,12 +64,13 @@ public class aty_ChargeMethod_Choice extends Activity
 	private void FindView()
 	{
 		tv_chargeMoney = (TextView) findViewById(R.id.tv_chargeMoney);
-		et_PhoneNO = (EditText) findViewById(R.id.et_PhoneNO);
+		/*et_PhoneNO = (EditText) findViewById(R.id.et_PhoneNO);
 		et_Password = (EditText) findViewById(R.id.et_password);
 		
 		btn_next = (Button) findViewById(R.id.btn_next);
-		Lin_bestpay = (LinearLayout) findViewById(R.id.Lin_bestpay);
+		Lin_bestpay = (LinearLayout) findViewById(R.id.Lin_bestpay);*/
 		
+		frame_payMethod = (FrameLayout) findViewById(R.id.frame_paymethod);
 		Spinner_choice = (Spinner) findViewById(R.id.spinner_method);
 	}
 	
@@ -74,13 +84,13 @@ public class aty_ChargeMethod_Choice extends Activity
 		Spinner_choice.invalidate();
 
 		Spinner_choice.setSelection(0);//默认选择翼支付
-		Lin_bestpay.setVisibility(View.VISIBLE);//选择翼支付时翼支付登录框可见
+		//Lin_bestpay.setVisibility(View.VISIBLE);//选择翼支付时翼支付登录框可见
 		
-		btn_next.setOnClickListener(new OnClickListener()
+		/*btn_next.setOnClickListener(new OnClickListener()
 		{
 			
 			@Override
-			public void onClick(View v)
+			public void onClick(View v) //用于翼支付
 			{
 				if( (AdapterView.INVALID_POSITION != Spinner_choice.getSelectedItemPosition())
 					&& (11 == et_PhoneNO.getText().toString().length()) )
@@ -98,7 +108,7 @@ public class aty_ChargeMethod_Choice extends Activity
 					myAlert.ShowToast(aty_ChargeMethod_Choice.this, getString(R.string.BestPay_account_error));
 				}
 			}
-		});
+		});*/
 		
 		Spinner_choice.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
@@ -109,15 +119,15 @@ public class aty_ChargeMethod_Choice extends Activity
 			{
 				// TODO Auto-generated method stub
 				myAlert.ShowToast(aty_ChargeMethod_Choice.this, getString(R.string.paymethod_toast_notice)+payMethods[position]);
-				if(0 != position)//翼支付登录框只有选择翼支付时可见
+				/*if(0 != position)//翼支付登录框只有选择翼支付时可见
 				{
 					Lin_bestpay.setVisibility(View.GONE);
 				}
 				else if(0 == position)
 				{
 					Lin_bestpay.setVisibility(View.VISIBLE);
-				}
-				
+				}*/
+				System.out.println("on item select 111");
 				SetPayMethod(myApp, position);
 				PayMethodNotice(position);
 			}
@@ -139,6 +149,9 @@ public class aty_ChargeMethod_Choice extends Activity
 	 */
 	private void PayMethodNotice(final int choice)
 	{
+		fm = getSupportFragmentManager();
+		transaction = fm.beginTransaction();
+		
 //		0:翼支付
 //      1:支付宝
 //      2:建设银行
@@ -148,24 +161,33 @@ public class aty_ChargeMethod_Choice extends Activity
 		{
 			case 0://翼支付
 			default:
-				
-				btn_next.setVisibility(View.VISIBLE);
+				System.out.println("--- paymethodnotice 11");
+				frame_payMethod.setVisibility(View.VISIBLE);
+				frg_PayMethod_BestPay bestPay = new frg_PayMethod_BestPay();
+				transaction.replace(R.id.frame_paymethod, bestPay);
+				bestPay.SetChoice(choice);//传递支付方式给对应的fragment
+				transaction.commit();
+				//btn_next.setVisibility(View.VISIBLE);
 				break;
 			case 1://支付宝
+				frame_payMethod.setVisibility(View.GONE);
 				myAlert.ShowToast(aty_ChargeMethod_Choice.this, "暂不支持");
-				btn_next.setVisibility(View.GONE);
+				//btn_next.setVisibility(View.GONE);
 				break;	
 			case 2://建行
+				frame_payMethod.setVisibility(View.GONE);
 				myAlert.ShowToast(aty_ChargeMethod_Choice.this, "暂不支持");
-				btn_next.setVisibility(View.GONE);
+				//btn_next.setVisibility(View.GONE);
 				break;
 			case 3://工行
+				frame_payMethod.setVisibility(View.GONE);
 				myAlert.ShowToast(aty_ChargeMethod_Choice.this, "暂不支持");
-				btn_next.setVisibility(View.GONE);
+				//btn_next.setVisibility(View.GONE);
 				break;
 			case 4://农行
+				frame_payMethod.setVisibility(View.GONE);
 				myAlert.ShowToast(aty_ChargeMethod_Choice.this, "暂不支持");
-				btn_next.setVisibility(View.GONE);
+				//btn_next.setVisibility(View.GONE);
 				break;
 			
 		}
@@ -185,5 +207,24 @@ public class aty_ChargeMethod_Choice extends Activity
 		else
 			myApp.setPayMethod(""+mychoice);
 	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig)
+	{
+		// TODO Auto-generated method stub
+		System.out.println("orientation = " + newConfig.orientation);
+		if( (Configuration.ORIENTATION_LANDSCAPE == newConfig.orientation) || 
+			(Configuration.ORIENTATION_PORTRAIT == newConfig.orientation) )
+		{
+			//requestWindowFeature(Window.FEATURE_NO_TITLE);
+			//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			setContentView(R.layout.aty_chargemethod_choice_layout);
+			
+			FindView();
+		}
+		
+		super.onConfigurationChanged(newConfig);
+	}
+	
 	
 }

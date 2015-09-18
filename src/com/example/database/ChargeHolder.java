@@ -12,8 +12,8 @@ public class ChargeHolder
 //	public static final String ORDER_TRANSFERENCE_CLOSE_STATUS = "TransferenceStatus";//圈存闭环状态
 	
 	//sqlite中没有布尔型，干脆直接用int存，此处常量用于转换为外部正常使用的布尔型
-	public static final int FALSE_HERE = 0;
-	public static final int TRUE_HERE = 1;
+	public static final int FALSE_HERE = 0;//失败
+	public static final int TRUE_HERE = 1;//成功
 	
 	
 	private  String Order_Time;// = "OrderTime";//订单时间
@@ -21,50 +21,59 @@ public class ChargeHolder
 	private  String Order_Reqtranse;//  = "OrderReqTranse";//订单流水号
 	private  String Order_Amount;//  = "Amount";//订单金额
 	private  String Order_Publish_CardID;
+	private  String payMethod;//支付方式
 	private  int Order_Charge_Status;//  = "ChargeStatus";//支付状态
 	private  int Order_Charge_NFC_Status;//  = "ChargeResult";//圈存状态
 	private  int Order_Transference_Close_Status;//圈存闭环状态
-	
+	private  String TAC;//圈存成功应答TAC
 	/**
 	 * 根据布尔型创建
-	 * @param OrderTime
-	 * @param Order_Seq
-	 * @param Order_Reqtranse
-	 * @param Order_Amount
-	 * @param Order_Publish_CardID
-	 * @param isCharge
-	 * @param isChargeNFC
-	 * @param isTransferenceClose
+	 * @param OrderTime 订单时间
+	 * @param Order_Seq  订单号
+	 * @param Order_Reqtranse 订单流水号
+	 * @param Order_Amount 订单金额
+	 * @param Order_Publish_CardID 发行卡号
+	 * @param payMethod 支付方式  01:翼支付  02:支付宝 03:建设银行 04:工商银行 05:农业银行
+	 * @param isCharge 支付状态
+	 * @param isChargeNFC 圈存状态
+	 * @param isTransferenceClose 圈存闭环状态
+	 * @param tAC 圈存成功TAC应答
 	 */
 	public ChargeHolder(String OrderTime, String Order_Seq, String Order_Reqtranse,
-			String Order_Amount, String Order_Publish_CardID, Boolean isCharge, Boolean isChargeNFC, Boolean isTransferenceClose)
+			String Order_Amount, String Order_Publish_CardID, String payMethod,
+			Boolean isCharge, Boolean isChargeNFC, Boolean isTransferenceClose,
+			String tAC)
 	{
 		setOrder_Time(OrderTime);
 		setOrder_Seq(Order_Seq);
 		setOrder_Reqtranse(Order_Reqtranse);
 		setOrder_Amount(Order_Amount);
 		setOrder_Publish_CardID(Order_Publish_CardID);
+		setPayMethod(payMethod);
 		setOrder_Charge_Status(isCharge);
 		setOrder_CHARGE_NFC_STATUS(isChargeNFC);
 		setOrder_Transference_Close_Status(isTransferenceClose);
-		
+		setTAC(tAC);
 	}
 
 	/**
 	 * 根据整形创建
-	 * @param OrderTime
-	 * @param Order_Seq
-	 * @param Order_Reqtranse
-	 * @param Order_Amount
-	 * @param Order_Publish_CardID
-	 * @param Charge_Status
-	 * @param ChargeNFC_Status
-	 * @param TransferenceClose_Status
-	 * @throws CustomTypeException 
+	 * @param OrderTime 订单时间
+	 * @param Order_Seq 订单号
+	 * @param Order_Reqtranse 订单流水号
+	 * @param Order_Amount 订单金额
+	 * @param Order_Publish_CardID 发行卡号
+	 * @param payMethod 支付方式     01:翼支付  02:支付宝 03:建设银行 04:工商银行 05:农业银行
+	 * @param Charge_Status 支付状态 true：支付
+	 * @param ChargeNFC_Status 圈存状态 true：圈存成功
+	 * @param TransferenceClose_Status 交易关闭状态 true：圈存的成功上报完成，交易关闭
+	 * @param tAC 圈存成功TAC应答
+	 * @throws CustomTypeException 状态量传入参数不正确时抛出的自定义异常
 	 */
 	public ChargeHolder(String OrderTime, String Order_Seq, String Order_Reqtranse,
-			String Order_Amount, String Order_Publish_CardID, int Charge_Status, int ChargeNFC_Status, 
-			int TransferenceClose_Status) throws CustomTypeException
+			String Order_Amount, String Order_Publish_CardID, String payMethod,
+			int Charge_Status, int ChargeNFC_Status, 
+			int TransferenceClose_Status, String tAC) throws CustomTypeException
 	{
 		if( (0 != Charge_Status) && (1 != Charge_Status)) throw new CustomTypeException("ChargeHolder 创建时int型只能为0或1"); 
 		if( (0 != ChargeNFC_Status) && (1 != ChargeNFC_Status)) throw new CustomTypeException("ChargeHolder 创建时int型只能为0或1"); 
@@ -75,10 +84,11 @@ public class ChargeHolder
 		setOrder_Reqtranse(Order_Reqtranse);
 		setOrder_Amount(Order_Amount);
 		setOrder_Publish_CardID(Order_Publish_CardID);
+		setPayMethod(payMethod);
 		setOrder_Charge_Status((TRUE_HERE == Charge_Status)?true:false);
 		setOrder_CHARGE_NFC_STATUS((TRUE_HERE == ChargeNFC_Status)?true:false);
 		setOrder_Transference_Close_Status((TRUE_HERE == TransferenceClose_Status)?true:false);
-	
+		setTAC(tAC);
 	}
 	
 	public String getOrder_Time()
@@ -129,6 +139,34 @@ public class ChargeHolder
 	public void setOrder_Publish_CardID(String order_Publish_CardID)
 	{
 		Order_Publish_CardID = order_Publish_CardID;
+	}
+
+	/**
+	 * 获取支付方式  
+	 * //		 01:翼支付
+	 * //        02:支付宝
+	 * //        03:建设银行
+	 * //        04:工商银行
+	 * //        05:农业银行
+	 * @return
+	 */
+	public String getPayMethod()
+	{
+		return payMethod;
+	}
+	
+	/**
+	 * 设置支付方式
+	 * //		 01:翼支付
+	 * //        02:支付宝
+	 * //        03:建设银行
+	 * //        04:工商银行
+	 * //        05:农业银行
+	 * @param payMethod
+	 */
+	public void setPayMethod(String payMethod)
+	{
+		this.payMethod = payMethod;
 	}
 
 	public Boolean getOrder_Charge_Status()
@@ -215,6 +253,40 @@ public class ChargeHolder
 			Order_Transference_Close_Status = FALSE_HERE;
 		}
 			
+	}
+
+	/**
+	 * 获取圈存成功TAC应答
+	 * @return
+	 */
+	public String getTAC()
+	{
+		return TAC;
+	}
+	/**
+	 * 设置圈存成功TAC应答，长度部位8个字符串长度，自动截断
+	 * null == tAC 替换为 00000000
+	 * tAC.isEmpty 替换为 12345678
+	 * tAC.length>8 取后8位 
+	 * @param tAC
+	 */
+	public void setTAC(final String tAC)
+	{
+		String temp = tAC;
+		if(null == temp)
+		{
+			temp = "00000000";
+		}
+		if(temp.isEmpty())
+		{
+			temp = "12345678";
+		}
+		if(temp.length() > 8)
+		{
+			temp.substring(temp.length()-8);
+		}
+		
+		TAC = tAC;
 	}
 	
 	

@@ -10,5 +10,11 @@
         <item>农业银行</item>
     </string-array>
     
+    <string-array 
+        name="Title">
+        <item>我的宜昌通</item>
+        <item>刷卡记录</item>
+        <item>充值记录</item>
+    </string-array>
     
 </resources>

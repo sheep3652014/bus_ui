@@ -33,6 +33,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.nfc.YiChangTong;
@@ -60,8 +61,8 @@ public class aty_NFC_bigCard_Init extends Activity
 	
 	private static final int CONNECT_ERROR = Global_Config.CONNECT_ERROR;
 	private static final int CIRCLE_START_MSG = Global_Config.INNER_MSG_START + 1;
-	private static final String NFC_TAG = "tag";
-	private static final String REQUEST_CIRCLE_ACK = "ack";//…Í«Î»¶¥Ê÷∏¡Óµƒ”¶¥
+	private static final String NFC_TAG = Global_Config.NFC_TAG;
+	private static final String REQUEST_CIRCLE_ACK = Global_Config.REQUEST_CIRCLE_ACK;//…Í«Î»¶¥Ê÷∏¡Óµƒ”¶¥
 	
 	private NfcAdapter nfcAdapter;
 	private PendingIntent pendingIntent;
@@ -74,12 +75,14 @@ public class aty_NFC_bigCard_Init extends Activity
 	private static final int REQUESTCODE = 0;
 	private static final int REQUESTCODE_CIRCLE = 1;
 	
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.aty_nfc_bigcard_init_layout);
 		
@@ -123,6 +126,7 @@ public class aty_NFC_bigCard_Init extends Activity
 	
 	private void Init()
 	{
+		
 		res = getResources();
 		myApp = (myApplication) getApplicationContext();
 		

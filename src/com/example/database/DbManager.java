@@ -57,11 +57,6 @@ public class DbManager
 		   return;
 	   }
 	   
-//	   if(0 != c.getCount()) 
-//	   {
-//		   c.close();
-//		   return;
-//	   }   
 	   
 	   ContentValues values = new ContentValues();
 	   
@@ -78,10 +73,12 @@ public class DbManager
 	   values.put(DbOpenHelper_charge.ORDER_REQTRANSE, ch.getOrder_Reqtranse());
 	   values.put(DbOpenHelper_charge.ORDER_AMOUNT, ch.getOrder_Amount());
 	   values.put(DbOpenHelper_charge.ORDER_PUBLISH_CARDID, ch.getOrder_Publish_CardID());
+	   values.put(DbOpenHelper_charge.PAYMETHOD, ch.getPayMethod());//支付方式  
 	   values.put(DbOpenHelper_charge.ORDER_CHARGE_STATUS, ch.getOrder_Charge_Status_Int());
 	   values.put(DbOpenHelper_charge.ORDER_CHARGE_NFC_STATUS, ch.getOrder_Charge_NFC_Status_Int());
 	   values.put(DbOpenHelper_charge.ORDER_TRANSFERENCE_CLOSE_STATUS, ch.getOrder_Transference_Close_Status_Int());
-			  
+	   values.put(DbOpenHelper_charge.TAC_NFCCARD, ch.getTAC());//圈存成功TAC应答
+	   
 	   db.insertOrThrow(DbOpenHelper_charge.TABLE, null,values);//DbOpenHelper_charge.ID, values);
 	   
 	   c = db.query(DbOpenHelper_charge.TABLE, null, null, null, null, null, null);
@@ -175,6 +172,20 @@ public class DbManager
    }
    
    /**
+    * query by publishCardNO 按发行卡号查询
+    * @param PublishCardNO
+    * @return
+    */
+   public Cursor QueryOrderbyPublishCardNO(String PublishCardNO)
+   {
+	   String selection = DbOpenHelper_charge.ORDER_PUBLISH_CARDID + "=" + "?";
+	   String[] selectionArgs = new String[]{PublishCardNO};
+	   Cursor c = db.query(DbOpenHelper_charge.TABLE, null, selection, selectionArgs, null, null, null);
+	   
+	   return c;
+   }
+   
+   /**
     * query by Transference fail status 按上报圈存流程失败状态查询
     * 
     */
@@ -227,6 +238,7 @@ public class DbManager
 	   cv.put(DbOpenHelper_charge.ORDER_CHARGE_STATUS, ch.getOrder_Charge_Status_Int()); 
 	   cv.put(DbOpenHelper_charge.ORDER_CHARGE_NFC_STATUS, ch.getOrder_Charge_NFC_Status_Int()); 
 	   cv.put(DbOpenHelper_charge.ORDER_TRANSFERENCE_CLOSE_STATUS, ch.getOrder_Transference_Close_Status_Int()); 
+	   cv.put(DbOpenHelper_charge.TAC_NFCCARD, ch.getTAC());
 	   
 	   String whereClause =	DbOpenHelper_charge.ORDER_REQTRANSE + "=" + "?";
 	   String[] whereArgs = new String[]{ch.getOrder_Reqtranse()}; 

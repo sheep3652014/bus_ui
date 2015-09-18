@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="oriange">#F3831F</color>
+    <color name="white">#fff</color>
+    <color name="l_blue">#1E90FF</color>
+    <color name="light_gray">#ffE9E9E7</color>
+    <color name="deep_gray">#ff919093</color>
+    <color name="black">#ff000000</color>
+    <color name="light_pink">#FFFFCCCC</color>
+    <color name="light_yellow">#ffeeee00</color>
+</resources>

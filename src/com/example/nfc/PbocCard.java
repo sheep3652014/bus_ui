@@ -74,10 +74,23 @@ public class PbocCard {
 	
 	protected static final int INIT_STEP = Global_Config.INIT_STEP;
 	protected static final int CIRCLE_INIT_STEP = Global_Config.CIRCLE_INIT_STEP;
-	//protected static final int CIRCLEING_STEP = Global_Config.CIRCLEING_STEP;
-	//protected static final int CIRCLE_COMPELTE_STEP = Global_Config.CIRCLE_COMPELTE_STEP;
+	protected static final int THIRDPARTY_PAY_INIT = Global_Config.THIRDPARTY_PAY_INIT;
+	protected static final int THIRDPARTY_PAY_NETRECORD = Global_Config.THIRDPARTY_PAY_NETRECORD;
+	//protected static final int THIRDPARTY_PAY_CIRCLE = Global_Config.THIRDPARTY_PAY_CIRCLE;
 	
-
+	protected static final String PUBLISHCARDNO = Global_Config.PUBLISHCARDNO;
+	protected static final String PHYSICS_CARDNO = Global_Config.PHYSICS_CARDNO;
+	protected static final String IMEI_NO = Global_Config.IMEI_NO;
+	protected static final String OLDAMOUNT = Global_Config.OLDAMOUNT;// "oldAmount";
+	protected static final String PUBLEN = Global_Config.PUBLEN;// "pubLen";
+	protected static final String PUBLIC_DATA = Global_Config.PUBLIC_DATA;
+	
+	protected static final String ORDERNO = Global_Config.ORDERNO;// "orderNO";
+	protected static final String ORDERSEQ = Global_Config.ORDERSEQ;// "orderSeq";
+	protected static final String ORDER_AMOUNT = Global_Config.ORDER_AMOUNT;
+	protected static final String ORDER_DATE = Global_Config.ORDER_DATE;
+	protected static final String BANKCARDNO = Global_Config.BANKCARDNO;
+	protected static final String LOGLIST = Global_Config.LOGLIST;
 	/*public static String load(IsoDep tech, Resources res) {
 		final Iso7816.Tag tag = new Iso7816.Tag(tech);
 

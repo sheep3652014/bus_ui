@@ -15,19 +15,15 @@ Additional permission under GNU GPL version 3 section 7 */
 
 package com.example.nfc;
 
-import java.lang.annotation.Retention;
-import java.lang.reflect.Array;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import android.R.integer;
-import android.app.Activity;
+import android.R.array;
 import android.content.Context;
 import android.content.res.Resources;
-import android.nfc.Tag;
-import android.nfc.tech.IsoDep;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -35,8 +31,8 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.util.Log;
 
-import com.example.bus_ui_demo.R;
 import com.example.config.Global_Config;
+import com.example.network.PayParams;
 import com.example.network.protocol;
 import com.example.nfc.Iso7816;
 import com.example.nfc.Util;
@@ -62,11 +58,23 @@ public final class YiChangTong extends PbocCard {
 	public final static byte[] VERIFY_KEY = {(byte)0x12,(byte)0x34,(byte)0x56};
 	private final static String GET_RANDOM = Global_Config.GET_RANDOM;
 	
-	private static final String REQUEST_CIRCLE_ACK = "ack";//申请圈存指令的应答
+	private static final String REQUEST_CIRCLE_ACK = Global_Config.REQUEST_CIRCLE_ACK;//申请圈存指令的应答
 	private static final int CONNECT_ERROR = Global_Config.CONNECT_ERROR;
 	
 	private static final int CIRCLE_START_MSG = Global_Config.INNER_MSG_START + 1;
-	private static final String NFC_TAG = "tag";
+	private static final int GOT_THIRDPARTYPAY_MSG = Global_Config.INNER_MSG_START + 2;
+	private static final int THIRDPARTYPAY_REQUEST_CMD_FIAL_MSG = Global_Config.INNER_MSG_START + 3;
+	private static final int THIRDPARTYPAY_CIRCLE_FAIL_MSG = Global_Config.INNER_MSG_START + 4;
+	private static final int THIRDPARTYPAY_CIRCLE_SUCCESS_MSG = Global_Config.INNER_MSG_START + 5;
+	private static final int THIRDPARTYPAY_REQUEST_CMD_SUCCESS_MSG = Global_Config.INNER_MSG_START + 6;
+	private static final int GOT_THIRDPARTYPAY_FAIL_MSG = Global_Config.INNER_MSG_START + 7;
+	private static final int GOT_TAG_SHOW_NOTICE = Global_Config.INNER_MSG_START + 8;
+	private static final int GOT_THIRDPARTYPAY_NETLOG_BALANCE = Global_Config.INNER_MSG_START + 9;
+	private static final int GOT_THIRDPARTYPAY_NETLOG = Global_Config.INNER_MSG_START + 10;
+	
+	private static final String NFC_TAG = Global_Config.NFC_TAG;
+	private static final String THIRDPARTYPAY_LIST = Global_Config.THIRDPARTYPAY_LIST;
+	private static final String THIRDPARTYPAY_NETLOG = Global_Config.THIRDPARTYPAY_NETLOG;
 	
 	//private YiChangTong(Iso7816.Tag tag, Resources res) {
 	public YiChangTong(Iso7816.Tag tag, Resources res) {
@@ -86,7 +94,7 @@ public final class YiChangTong extends PbocCard {
 		{
 
 			YiChangTong ret = new YiChangTong(tag, res);
-
+			System.out.println("circle step = " + myApp.getCircleStep());
 			switch (myApp.getCircleStep())
 			{
 				case PbocCard.INIT_STEP:
@@ -96,114 +104,12 @@ public final class YiChangTong extends PbocCard {
 					ret = getInit(tag, res, myApp);
 					tag.close();
 					break;
-/*				case PbocCard.INIT_STEP:
-				default:
-					System.out.println("here in init_step");
-					// 初始化
-					ret = getInit(tag, res, myApp);
-					new Thread(new Runnable()
-					{
-						
-						@Override
-						public void run()
-						{
-							// TODO Auto-generated method stub
-							Looper.prepare();
-							Message msg = handler.obtainMessage();
-							msg.what = 99;
-							Bundle data = new Bundle();
-							Parcelable p = (Parcelable)tag.getIsoDep_Tag().getTag();
-							Tag tag1 = (Tag)p;
-							IsoDep iso = IsoDep.get(tag1);
-							Iso7816.Tag tag2 = new Iso7816.Tag(iso);
-							System.out.println("tag is " + tag.getIsoDep_Tag().getTag() +"_"+ tag2.toString());
-							data.putParcelable(NFC_TAG, tag.getIsoDep_Tag().getTag());
-							msg.setData(data);
-							handler.sendMessage(msg);
-							Looper.loop();
-						}
-					}).start();
-					
-					break;*/
-			/*case PbocCard.INIT_STEP:
-				default:
-					System.out.println("here in init_step");
-					
-					final Handler handler = new Handler()
-					{
 
-						@Override
-						public void handleMessage(Message msg)
-						{
-							// TODO Auto-generated method stub
-							//super.handleMessage(msg);
-							if(msg.what == 2)
-							{
-								YiChangTong ret = new YiChangTong(tag, res);
-								System.out.println("---111");
-								ret = getInit(tag, res, myApp);
-								System.out.println("---111---");
-								tag.close();
-							}
-						}
-						
-					};
-					Thread thread = new Thread(new Runnable()
-					{
-						
-						@Override
-						public void run()
-						{
-							YiChangTong ret1 = new YiChangTong(tag, res);
-							ret1 = getInit(tag, res, myApp);
-							
-							boolean send = protocol.sockettest(context);
-							System.out.println("send is = " +send);
-							
-							handler.sendEmptyMessage(2);	
-
-						}	
-					});
-					//thread.setPriority(Thread.MAX_PRIORITY);
-					thread.start();
-					
-					break;*/
+			
 				case PbocCard.CIRCLE_INIT_STEP:
 					System.out.println("-" + myApp.getCircleStep() + "_"
 							+ PbocCard.CIRCLE_INIT_STEP);
 
-					/*final Handler mHandler = new Handler()
-					{
-
-						@Override
-						public void handleMessage(Message msg)
-						{
-							// TODO Auto-generated method stub
-							//super.handleMessage(msg);
-							YiChangTong ret1 = new YiChangTong(tag, res);
-							if(CONNECT_ERROR == msg.what)
-							{
-								myAlert.ShowToast(context, context.getString(R.string.network_error));
-							}
-							if(CIRCLE_START_MSG == msg.what)
-							{
-								myApp.setBigCard_CircleCmd(msg.getData().getString(REQUEST_CIRCLE_ACK));
-								ret1 = Circle(tag, res, myApp);
-								if(null != ret1)
-								{
-									System.out.println("before money = " + ret1.bean.getBeforeChargeMoney());
-									System.out.println("tac = "+ret1.bean.getTAC_CARD());
-									System.out.println("after money = " + ret1.bean.getAfterChargeMoney());
-									myApp.setBeforeChargeMoney(ret1.bean.getBeforeChargeMoney());
-									myApp.setAfterChargeMoney(ret1.bean.getAfterChargeMoney());
-									myApp.setTAC_CARD(ret1.bean.getTAC_CARD());
-								}
-							}
-							tag.close();
-							super.handleMessage(msg);
-						}
-						
-					};*/
 					new Thread(new Runnable()
 					{
 						
@@ -232,7 +138,13 @@ public final class YiChangTong extends PbocCard {
 					}).start();
 					
 					break;
-
+					
+				case PbocCard.THIRDPARTY_PAY_INIT:
+					ThirdPartyPay(context, tag, res, myApp, handler);
+					break;
+				case PbocCard.THIRDPARTY_PAY_NETRECORD://在线补登记录
+					ThirdPartyPay_NetLog(tag, res, myApp, handler, context);
+					break;
 			}
 			
 			return ret;
@@ -381,10 +293,11 @@ public final class YiChangTong extends PbocCard {
 					System.out.println("initmsg = " + initMsg);
 					ret.bean.setCircleInitMsg(initMsg);
 					
-					if( (CASH = tag.getBalance(true)).isOkey() )
+					/* mi3 在圈入初始化后读取金额，可导致多次圈存才能成功圈入
+					 * if( (CASH = tag.getBalance(true)).isOkey() )
 					{
 						System.out.println("after init = " + Util.bytesToString(CASH.getBytes()));
-					}
+					}*/
 					//myApp.setCircleInitMsg(initMsg);
 					return ret;
 				}
@@ -485,6 +398,305 @@ public final class YiChangTong extends PbocCard {
 		count = null;
 	}*/
 	
+	/**
+	 * 补登流程
+	 * 发送 GOT_THIRDPARTYPAY_MSG 消息 内含Iso7816.Tag, 和当前卡片下的补登数据list
+	 * @param context
+	 * @param tag
+	 * @param res
+	 * @param myApp 
+	 * @param handler
+	 * @return 
+	 */
+	final static void ThirdPartyPay(final Context context,final Iso7816.Tag tag, final Resources res, 
+			final myApplication myApp, final Handler handler)
+	{
+		YiChangTong ret = new YiChangTong(tag, res);
+		
+		new Thread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				Looper.prepare();
+				
+				YiChangTong ret1 = new YiChangTong(tag, res);
+				System.out.println("here in init_step");
+				// 初始化
+				ret1 = getInit(tag, res, myApp);
+				Message msg = null;//handler.obtainMessage();
+				
+				GotTagNotice(msg, handler);//发送发现卡片消息，显示等待界面
+				
+				myApp.setBeforeChargeMoney(ret1.bean.getBeforeChargeMoney());
+				myApp.setPublicMsg(ret1.bean.getPublishMsg());
+				myApp.setPublishCardNO(ret1.bean.getPublishCardNO());
+				ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
+				list = (ArrayList<Map<String, String>>) getThirdPartyOrder(ret1, myApp, context, handler);
+				
+//				if(list.isEmpty())
+//				{
+//					//获取补登数据失败，或者没有补登数据,加入示例数据
+//					HashMap<String, String> map = new HashMap<String, String>();
+//					
+//					map.put(ORDER_AMOUNT, ""+100);
+//					map.put(ORDERNO, "12345667890123456"); //可能只有订单号，没有订单流水号，所以此处将订单号、订单流水号人为设置相同
+//					map.put(ORDERSEQ, "12345667890123456");
+//					map.put(ORDER_DATE, "20150816");
+//					map.put(BANKCARDNO, "0000000000000000000");
+//					map.put(PUBLISHCARDNO, "1234567890123456");
+//					list.add(map);
+//				}
+			    
+				if(list.isEmpty())
+				{
+					msg = handler.obtainMessage();
+					msg.what = GOT_THIRDPARTYPAY_FAIL_MSG;
+					handler.sendMessage(msg);
+				}
+				else {
+					msg = handler.obtainMessage();
+					msg.what = GOT_THIRDPARTYPAY_MSG;
+					Bundle bundle = new Bundle();
+					bundle.putParcelable(NFC_TAG, tag.getIsoDep_Tag().getTag());
+					bundle.putSerializable(THIRDPARTYPAY_LIST, list);
+					msg.setData(bundle);
+					handler.sendMessage(msg);
+				}
+				Looper.loop();
+			}
+		}).start();
+		
+		//return ret;
+	}
+	
+	/**
+	 * 发现卡，UI线程显示等待提示界面
+	 * @param msg
+	 * @param handler
+	 */
+	private final static void GotTagNotice(Message msg, Handler handler)
+	{
+		synchronized (handler)
+		{
+			msg = handler.obtainMessage();
+			msg.what = GOT_TAG_SHOW_NOTICE;
+			handler.sendMessage(msg);
+			
+			try
+			{
+				handler.wait();
+			} catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				System.out.println("wait error = " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+	}
+	/**
+	 * 补登信息请求帧拼接
+	 * @param ret
+	 * @param myApp
+	 * @param context
+	 * @param handler
+	 * @return 请求成功返回指定发行卡号下的补登数据list，失败返回list.isEmpty
+	 */
+	final static List<Map<String, String>> getThirdPartyOrder(YiChangTong ret, myApplication myApp,
+			Context context, Handler handler)
+	{
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		
+		int m = ret.bean.getBeforeChargeMoney();
+		String m1 = Integer.toHexString(m);
+		String money = Util.to8String(m1);
+		String publicMsg = ret.bean.getPublishMsg();
+		String publicNO = ret.bean.getPublishCardNO();
+		String physicCardNO = myApp.getPhysicsCardNO();
+		String IMEI = myApp.getIMEI();
+		String len = Integer.toHexString(publicMsg.length());
+		if(len.length() > 2) //长度大于255，直接设成0，是服务器返回错误
+			len = "00";
+		//		Card_number	16	N	发行卡号
+		//		PhysicsCardNO	8	N	物理卡号
+		//		IMEI	15	N	IMEI
+		//		OldMount	8	HEX	卡片余额 单位分
+		//		pubLen	2	H	公共信息长度
+		//		PublicData	N	H	公共信息
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put(PUBLISHCARDNO, publicNO); 
+		map.put(PHYSICS_CARDNO,physicCardNO); 
+		map.put(IMEI_NO,IMEI);
+	    map.put(OLDAMOUNT,money); 
+	    map.put(PUBLEN,len); 
+	    map.put(PUBLIC_DATA,publicMsg);
+		
+		return (protocol.RequestThridPartyPayOrder(context, map, handler));
+	}
+	
+	/**
+	 * 补登圈存
+	 * 包括圈存初始化，请求圈存指令，圈存
+	 * @param tag
+	 * @param res
+	 * @param myApp
+	 * @param handler
+	 * @param context
+	 */
+	final static public void ThirdPartyPay_Circle(final Iso7816.Tag tag, final Resources res, 
+			final myApplication myApp, final Handler handler, final Context context)
+	{
+		new Thread(new Runnable()
+		{
+			
+			@Override
+			public void run()
+			{
+				YiChangTong ret = new YiChangTong(tag, res);
+				 //圈存初始化 
+				ret = getCircleInit(tag, res, myApp);
+				
+				myApp.setCircleInitMsg(ret.bean.getCircleInitMsg());
+				
+				// TODO Auto-generated method stub
+				//String Ack = protocol.RequestCircle(context, myApp, handler);
+				
+				String Ack = protocol.RequestThirdParyPayCircle(context, myApp, handler);
+				
+				Message msg = null;//handler.obtainMessage();
+				Bundle bundle = new Bundle();
+				if(null != Ack)
+				{	
+					synchronized (handler)
+					{
+						msg = handler.obtainMessage();
+						msg.what = THIRDPARTYPAY_REQUEST_CMD_SUCCESS_MSG;
+						handler.sendMessage(msg);
+						try
+						{
+							handler.wait();//等待aty_ThirdParyPay_Circle唤醒
+						} catch (InterruptedException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							System.out.println("wait error = " + e.getMessage());
+							//tag.close();
+						}
+					}
+					
+					myApp.setBigCard_CircleCmd(Ack);
+					//开始圈存
+					ret = Circle(tag, res, myApp);
+					if(null != ret)
+					{
+						//圈存成功
+						System.out.println("before money = " + ret.bean.getBeforeChargeMoney());
+						System.out.println("tac = "+ret.bean.getTAC_CARD());
+						System.out.println("after money = " + ret.bean.getAfterChargeMoney());
+						myApp.setBeforeChargeMoney(ret.bean.getBeforeChargeMoney());
+						myApp.setAfterChargeMoney(ret.bean.getAfterChargeMoney());
+						myApp.setTAC_CARD(ret.bean.getTAC_CARD());
+						
+						//myApp.setCircleStep(INIT_STEP);
+						//关闭资源 
+						tag.close();
+						msg = handler.obtainMessage();
+						msg.what = THIRDPARTYPAY_CIRCLE_SUCCESS_MSG;
+						handler.sendMessage(msg);
+					}
+					else
+					{
+						//圈存失败
+						System.out.println("thirdpartypay_circle fail");
+						myApp.setCircleStep(INIT_STEP);
+						//关闭资源 
+						tag.close();
+						msg = handler.obtainMessage();
+						msg.what = THIRDPARTYPAY_CIRCLE_FAIL_MSG;
+						handler.sendMessage(msg);
+					}
+				}
+				else {
+					//申请圈存失败
+					System.out.println("request circle cmd fail");
+					//myApp.setCircleStep(INIT_STEP);
+					//关闭资源 
+					//tag.close();
+					msg = handler.obtainMessage();
+					msg.what = THIRDPARTYPAY_REQUEST_CMD_FIAL_MSG;
+					handler.sendMessage(msg);
+				}
+			}
+		}).start();
+	}
+	
+	
+	/**
+	 * 查询在线补登记录
+	 * @param tag
+	 * @param res
+	 * @param myApp
+	 * @param handler
+	 * @param context
+	 */
+	private static void ThirdPartyPay_NetLog(final Iso7816.Tag tag, final Resources res, 
+			final myApplication myApp, final Handler handler, final Context context)
+	{
+		new Thread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				// TODO Auto-generated method stub
+				Looper.prepare();
+				
+				YiChangTong ret = new YiChangTong(tag, res);
+				// 初始化
+				ret = getInit(tag, res, myApp);
+				
+				ArrayList<Map<String, String>> listLog = (ArrayList<Map<String, String>>) ret.bean.getListLog();
+				String publishCardNO = ret.bean.getPublishCardNO();
+				int balance = ret.bean.getBeforeChargeMoney();
+				Message msg = null;//handler.obtainMessage();
+				
+				synchronized (handler)
+				{
+					msg = handler.obtainMessage();
+					msg.what = GOT_THIRDPARTYPAY_NETLOG_BALANCE;
+					msg.arg1 = balance;
+					Bundle data = new Bundle();
+					data.putSerializable(PbocCard.LOGLIST, listLog);
+					msg.setData(data);
+					handler.sendMessage(msg);
+					try
+					{
+						handler.wait();
+					} catch (InterruptedException e)
+					{
+						// TODO Auto-generated catch block
+						System.out.println("handler wait error " + e.getMessage());
+						e.printStackTrace();
+					}
+				}
+				ArrayList<Map<String, String>> list = new ArrayList<Map<String,String>>();
+				
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put(PayParams.CARD_NUMBER, publishCardNO);
+				list = (ArrayList<Map<String,String>>)protocol.RequestThirdPartyLog(context, map, handler);
+				
+				tag.close();
+				msg = handler.obtainMessage();
+				msg.what = GOT_THIRDPARTYPAY_NETLOG;
+				Bundle data = new Bundle();
+				data.putSerializable(THIRDPARTYPAY_NETLOG, list);
+				msg.setData(data);
+				handler.sendMessage(msg);
+				
+				Looper.loop();
+			}
+		}).start();
+		
+	}
 	
 	
 }

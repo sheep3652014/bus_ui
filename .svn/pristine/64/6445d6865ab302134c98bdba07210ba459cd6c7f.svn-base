@@ -1,0 +1,11 @@
+[core]
+	symlinks = false
+	repositoryformatversion = 0
+	filemode = false
+	logallrefupdates = true
+[remote "bus_ui"]
+	url = https://github.com/sheep3652014/bus_ui.git
+	fetch = +refs/heads/*:refs/remotes/bus_ui/*
+[branch "master"]
+	remote = bus_ui
+	merge = refs/heads/master

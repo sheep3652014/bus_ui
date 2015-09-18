@@ -35,6 +35,9 @@ public class PayParams
 	public static final String PHONENO = Global_Config.PHONENO;//"phoneNO";
 	public static final String CIRCLEINIT_DATA = Global_Config.CIRCLEINIT_DATA;//"circleinit";
 	public static final String TAC_CARD = Global_Config.TAC_CARD;//"tac";
+	public static final String USERNAME = Global_Config.USERNAME;
+	public static final String PASSWROD = Global_Config.PASSWORD;
+	//public static final String USERNAME_LEN = Global_Config.USERNME_LEN;
 	
 	private String Card_number;
 	private String IMEI;
@@ -46,6 +49,10 @@ public class PayParams
 	private String PayType;
 	private String SoftVersion;
 	private String phoneNO;
+	
+	private boolean PayStatus;//支付状态
+	private boolean CircleStatus;//圈存状态
+	private boolean Transference_Close_Status;//支付、圈存、圈存上报均完成，即交易关闭状态
 	
 	/**
 	 * 获取发行卡号
@@ -216,6 +223,55 @@ public class PayParams
 	public void setPhoneNO(String phoneNO)
 	{
 		this.phoneNO = phoneNO;
+	}
+	
+	/**
+	 * 获取支付成功状态 
+	 * @return ture： 成功支付  false：支付失败
+	 */
+	public boolean isPayStatus()
+	{
+		return PayStatus;
+	}
+	/**
+	 * 设置支付成功状态 ture： 成功支付  false：支付失败
+	 * @param payStatus
+	 */
+	public void setPayStatus(boolean payStatus)
+	{
+		PayStatus = payStatus;
+	}
+	/**
+	 * 获取圈存成功状态 
+	 * @return ture： 成功  false：失败
+	 */
+	public boolean isCircleStatus()
+	{
+		return CircleStatus;
+	}
+	/**
+	 * 设置圈存成功状态 ture： 成功  false：失败
+	 * @param circleStatus
+	 */
+	public void setCircleStatus(boolean circleStatus)
+	{
+		CircleStatus = circleStatus;
+	}
+	/**
+	 * 	获取交易关闭状态 
+	 * @return ture： 完成 false：未完成
+	 */
+	public boolean isTransference_Close_Status()
+	{
+		return Transference_Close_Status;
+	}
+	/**
+	 * 设置交易关闭状态  ture： 完成 false：未完成
+	 * @param transference_Close_Status
+	 */
+	public void setTransference_Close_Status(boolean transference_Close_Status)
+	{
+		Transference_Close_Status = transference_Close_Status;
 	}
 	
 	

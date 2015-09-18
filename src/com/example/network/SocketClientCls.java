@@ -32,8 +32,9 @@ public class SocketClientCls {
 			System.out.println("-->  socket create");
 		} catch (Exception e) {
 			// TODO: handle exception
+			System.out.println("--" + m_socket + "_"+m_socket.toString());
 			CloseLink();//创建出错,关闭资源
-			System.out.println("--> error " + e.getMessage());
+			System.out.println("--> create socket error " + e.getMessage());
 		} 
 		
 	}

@@ -1,0 +1,87 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/Lin_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    
+    <FrameLayout 
+        android:id="@+id/frame_Title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        >
+    </FrameLayout>
+       
+    <LinearLayout 
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="horizontal"
+    	android:layout_marginTop="10dp"
+    	android:layout_marginBottom="10dp"
+        >
+        
+        <TextView
+            android:id="@+id/tv_tab0" 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="@string/tab0_main"
+            android:textSize="@dimen/font_size_16"
+            android:textColor="@color/l_blue"
+            />
+        <TextView 
+            android:id="@+id/tv_tab1" 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="@string/tab1_main"
+            android:textSize="@dimen/font_size_16"
+            android:textColor="@color/l_blue"
+            />
+        <TextView 
+            android:id="@+id/tv_tab2" 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:text="@string/tab2_main"
+            android:textSize="@dimen/font_size_16"
+            android:textColor="@color/l_blue"
+            />
+    </LinearLayout>
+    
+    <ImageView 
+        android:id="@+id/iv_img"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_width="40dp"
+    	android:layout_height="4dp"
+    	android:background="@drawable/line_s"
+    	android:scaleType="matrix"
+        />
+    
+    <android.support.v4.view.ViewPager
+        android:id="@+id/ViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <!-- PagerTabStrip是标签页的切换效果 -->
+        <!-- <android.support.v4.view.PagerTabStrip
+            android:id="@+id/PagerTab"
+            android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            >
+         
+        </android.support.v4.view.PagerTabStrip> -->
+    	
+    </android.support.v4.view.ViewPager>
+    
+
+    
+</LinearLayout>

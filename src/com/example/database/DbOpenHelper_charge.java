@@ -12,7 +12,7 @@ public class DbOpenHelper_charge extends SQLiteOpenHelper
 {
 	private static final String TAG = "DbOpenHelper_menu";
 	
-	private static final String DB = "ChargeRecord.db";
+	public static final String DB = "ChargeRecord.db";
 	public static final String TABLE = "chargetable";
 	
 	public static final String ID = "_id";
@@ -23,9 +23,11 @@ public class DbOpenHelper_charge extends SQLiteOpenHelper
 	public static final String ORDER_REQTRANSE = "OrderReqTranse";//订单流水号
 	public static final String ORDER_AMOUNT = "Amount";//订单金额
 	public static final String ORDER_PUBLISH_CARDID = "NFCPublishCardID";//发行卡号，用于标记给那张卡充值
+	public static final String PAYMETHOD = "paymethod";//支付方式  01:翼支付  02:支付宝 03:建设银行 04:工商银行 05:农业银行
 	public static final String ORDER_CHARGE_STATUS = "ChargeStatus";//翼支付支付状态
 	public static final String ORDER_CHARGE_NFC_STATUS = "ChargeResult";//圈存写卡状态
 	public static final String ORDER_TRANSFERENCE_CLOSE_STATUS = "TransferenceStatus";//圈存闭环状态
+	public static final String TAC_NFCCARD = "tac_ack";//圈存成功后的应答TAC
 	
 	public static final int Version = 1; //数据库版本号，升降级比对用
 
@@ -68,12 +70,17 @@ public class DbOpenHelper_charge extends SQLiteOpenHelper
 		sb.append(ORDER_REQTRANSE + " TEXT,");//" STRING,");//订单流水号
 		sb.append(ORDER_AMOUNT + " STRING,");//订单金额
 		sb.append(ORDER_PUBLISH_CARDID + " STRING,");//发行卡号，用于区分同一账号对不同卡的充值
+		sb.append(PAYMETHOD + " VARCHAR(4),");//支付方式  01:翼支付  02:支付宝 03:建设银行 04:工商银行 05:农业银行
 		sb.append(ORDER_CHARGE_STATUS + " INTEGER,");//充值状态
 		sb.append(ORDER_CHARGE_NFC_STATUS + " INTEGER,");//圈存写卡状态
-		sb.append(ORDER_TRANSFERENCE_CLOSE_STATUS + " INTEGER");//圈存闭环状态
+		sb.append(ORDER_TRANSFERENCE_CLOSE_STATUS + " INTEGER,");//圈存闭环状态
+		sb.append(TAC_NFCCARD + " VARCHAR(10)");//圈存成功应答TAC
 		sb.append(");");//
 		
 		db.execSQL(sb.toString());
+		
+		String sql = DbOpenHelper_Third_Human.Create();
+		db.execSQL(sql);
 		
 		Log.d(TAG, "create table:"+ TABLE);
 	}
@@ -84,6 +91,8 @@ public class DbOpenHelper_charge extends SQLiteOpenHelper
 		// TODO Auto-generated method stub
 		//upgrade: just delete the old table and create a new one
 		String sql = "DROP TABLE IF EXISTS" + TABLE + ";" ;
+		db.execSQL(sql);
+		sql = DbOpenHelper_Third_Human.Upgrage();
 		db.execSQL(sql);
 		onCreate(db);
 	}

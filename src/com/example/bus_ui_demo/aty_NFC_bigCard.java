@@ -48,10 +48,7 @@ public class aty_NFC_bigCard extends FragmentActivity
 	private static final String LOGLIST = Global_Config.LOGLIST;
 	private static final String CIRCLEINIT_MSG = Global_Config.CICLEINIT_MSG;
 	
-	public static final int INIT_STEP = 0;
-	public static final int CIRCLE_INIT_STEP = 1;
-	public static final int CIRCLEING_STEP = 2;
-	public static final int CIRCLE_COMPELTE_STEP = 3;
+	private static final int INIT_STEP = Global_Config.INIT_STEP;
 	
 	private static final String TAG = "aty_NFC_bigCard";
 	private FrameLayout frame_bigCard;
@@ -76,7 +73,7 @@ public class aty_NFC_bigCard extends FragmentActivity
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.aty_nfc_bigcard_layout);
 		
 		myApp = (myApplication) getApplicationContext();
@@ -222,7 +219,7 @@ public class aty_NFC_bigCard extends FragmentActivity
 				Bundle bundle = data.getExtras();//getIntent().getExtras();
 				System.out.println("--bundle is "+bundle.toString());
 				myApp.setPublishCardNO(bundle.getString(PUBLISHCARDNO));
-				myApp.setPublishMsg(bundle.getString(PUBLISHMSG));
+				myApp.setPublicMsg(bundle.getString(PUBLISHMSG));
 				myApp.setBeforeChargeMoney(bundle.getInt(BEFORECHARGE_MONEY));
 				myApp.setRandom(bundle.getString(RANDOM));
 				myApp.setListLog((ArrayList<Map<String, String>>)bundle.getSerializable(LOGLIST));

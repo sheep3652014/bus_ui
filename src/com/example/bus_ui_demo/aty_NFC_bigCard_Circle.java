@@ -7,19 +7,31 @@ import com.example.Alert.myAlert;
 import com.example.Alert.myAlert.ShowOneClickDialog_Interface;
 import com.example.application.myApplication;
 import com.example.config.Global_Config;
+import com.example.database.ChargeHolder;
+import com.example.database.CustomTypeException;
+import com.example.database.DbManager;
+import com.example.database.DbOpenHelper_charge;
 import com.example.network.PayParams;
+import com.example.network.Service_DealCloseReport;
 import com.example.network.protocol;
+import com.example.network.Service_DealCloseReport.myBinder;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -28,6 +40,7 @@ import android.widget.ImageButton;
 
 public class aty_NFC_bigCard_Circle extends FragmentActivity
 {
+	private static final String TAG = "aty_NFC_bigCard_Circle"; 
 	private ImageButton ib_check;
 	private FrameLayout frame_notice;
 	private static boolean isResultBack = false;//是否返回标志
@@ -50,14 +63,14 @@ public class aty_NFC_bigCard_Circle extends FragmentActivity
 	private static final int CONNECT_ERROR = Global_Config.CONNECT_ERROR;
 	private static final int CIRCLE_COMPELETE_REPORT_SUCCESS = Global_Config.INNER_MSG_START + 1;
 	private static final int CIRCLE_COMPELETE_REPORT_FAIL = Global_Config.INNER_MSG_START + 2;
-	
+	private ServiceConnection serconn = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.aty_nfc_bigcard_circle_layout);
 		
@@ -75,6 +88,7 @@ public class aty_NFC_bigCard_Circle extends FragmentActivity
 	
 	private void InitView()
 	{
+		ib_check.setVisibility(View.VISIBLE);
 		ib_check.setOnClickListener(new OnClickListener()
 		{
 			
@@ -107,13 +121,14 @@ public class aty_NFC_bigCard_Circle extends FragmentActivity
 		if(!isResultBack) return;//圈存没成功，退出
 		isResultBack = false;
 		
+		ib_check.setVisibility(View.GONE);//圈存成功，隐藏圈存调用按钮
 		frame_notice.setVisibility(View.VISIBLE);
 		fm = getSupportFragmentManager();
 		transaction = fm.beginTransaction();
 		transaction.replace(R.id.frame_notice, new frg_NFC_bigCard_CircleComplete_notice());
 		transaction.commit();
 	}
-
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
@@ -134,6 +149,8 @@ public class aty_NFC_bigCard_Circle extends FragmentActivity
 			{
 				//圈存成功，弹出成功窗口
 				isResultBack = true;
+				//更形圈存完成状态
+				UpdateCircleStatus(myApp.getOrderSeq(), true, TAC);
 				CircleSuccess(aty_NFC_bigCard_Circle.this, TAC);
 			}
 			else {
@@ -166,7 +183,9 @@ public class aty_NFC_bigCard_Circle extends FragmentActivity
 		final HashMap<String, String> map = new HashMap<String, String>();
 		map.put(PayParams.ORDERSEQ, myApp.getOrderSeq());
 		map.put(PayParams.TAC_CARD, TAC);
-		//发送圈存成功指令至服务器
+		
+		BindSerive(aty_NFC_bigCard_Circle.this);
+		/*//发送圈存成功指令至服务器
 		new Thread(new Runnable()
 		{
 			
@@ -187,8 +206,38 @@ public class aty_NFC_bigCard_Circle extends FragmentActivity
 					mHandler.sendMessage(msg);
 				}
 			}
-		}).start();
+		}).start();*/
 	}
+	
+	/**
+	 * 绑定圈存完成上报服务
+	 * @param context
+	 */
+	private void BindSerive(Context context)
+	{
+		serconn = new ServiceConnection()
+		{
+			
+			@Override
+			public void onServiceDisconnected(ComponentName name)
+			{
+				// TODO Auto-generated method stub
+				System.out.println("disconnect");
+			}
+			
+			@Override
+			public void onServiceConnected(ComponentName name, IBinder service)
+			{
+				// TODO Auto-generated method stub
+				System.out.println("connect");
+				Service_DealCloseReport mService = ((myBinder)service).getService();
+			}
+		};
+		
+		Intent intent = new Intent(context, Service_DealCloseReport.class);
+		bindService(intent, serconn, Context.BIND_AUTO_CREATE);
+	}
+	
 	@Override
 	public void onBackPressed()
 	{
@@ -213,14 +262,14 @@ public class aty_NFC_bigCard_Circle extends FragmentActivity
 					myAlert.ShowToast(aty_NFC_bigCard_Circle.this, getString(R.string.network_error));
 					BackHome(aty_NFC_bigCard_Circle.this);
 					break;
-				case CIRCLE_COMPELETE_REPORT_FAIL:
-					myAlert.ShowToast(aty_NFC_bigCard_Circle.this, getString(R.string.circle_report_fail));
-					//BackHome(aty_NFC_bigCard_Circle.this);
-					break;
-				case CIRCLE_COMPELETE_REPORT_SUCCESS:
-					myAlert.ShowToast(aty_NFC_bigCard_Circle.this, getString(R.string.circle_report_success));
-					//BackHome(aty_NFC_bigCard_Circle.this);
-					break;
+//				case CIRCLE_COMPELETE_REPORT_FAIL:
+//					myAlert.ShowToast(aty_NFC_bigCard_Circle.this, getString(R.string.circle_report_fail));
+//					//BackHome(aty_NFC_bigCard_Circle.this);
+//					break;
+//				case CIRCLE_COMPELETE_REPORT_SUCCESS:
+//					myAlert.ShowToast(aty_NFC_bigCard_Circle.this, getString(R.string.circle_report_success));
+//					//BackHome(aty_NFC_bigCard_Circle.this);
+//					break;
 				default:
 					break;
 			}
@@ -239,5 +288,91 @@ public class aty_NFC_bigCard_Circle extends FragmentActivity
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 		((Activity)context).finish();
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		// TODO Auto-generated method stub
+		if(null != serconn)
+		{
+			unbindService(serconn);
+		}
+		super.onDestroy();
+	}
+	
+	/**
+	 * 更新圈存状态 
+	 * @param OrderSeq 订单流水号
+	 * @param CircleStatus true：圈存成功 false：圈存失败
+	 * @param tac 圈存成功应答TAC
+	 */
+	private void UpdateCircleStatus(String OrderSeq, boolean CircleStatus, String tac)
+	{
+		String OrderTime = "";
+		String Order_Seq = "";
+		String Order_Reqtranse = "";
+		String Order_Amount = "";
+		String Order_Publish_CardID = "";
+		String payMethod = "";
+
+		DbManager dm = new DbManager(this);
+		Cursor c = dm.QueryOrderbyReqTranse(OrderSeq);
+		c.moveToNext();
+		if (0 != c.getCount())// 数据库中存在该订单流水号的订单信息
+		{
+			OrderTime = c.getString(c
+					.getColumnIndex(DbOpenHelper_charge.ORDER_TIME));
+			Order_Seq = c.getString(c
+					.getColumnIndex(DbOpenHelper_charge.ORDER_SEQ));
+			Order_Reqtranse = c.getString(c
+					.getColumnIndex(DbOpenHelper_charge.ORDER_REQTRANSE));
+			Order_Amount = c.getString(c
+					.getColumnIndex(DbOpenHelper_charge.ORDER_AMOUNT));
+			Order_Publish_CardID = c.getString(c
+					.getColumnIndex(DbOpenHelper_charge.ORDER_PUBLISH_CARDID));
+			payMethod = c.getString(c
+					.getColumnIndex(DbOpenHelper_charge.PAYMETHOD));
+
+			int Charge_Status = c
+					.getInt(c
+							.getColumnIndex(DbOpenHelper_charge.ORDER_CHARGE_STATUS));
+			// int ChargeNFC_Status =
+			// c.getInt(c.getColumnIndex(DbOpenHelper_charge.ORDER_CHARGE_NFC_STATUS));
+			int TransferenceClose_Status = c
+					.getInt(c
+							.getColumnIndex(DbOpenHelper_charge.ORDER_TRANSFERENCE_CLOSE_STATUS));
+			int ChargeNFC_Status = 0;
+			if (CircleStatus)
+			{
+				ChargeNFC_Status = 1;
+			}
+			//如果充值状态不对，不允许更新圈存状态
+			if(ChargeHolder.TRUE_HERE!=Charge_Status)
+			{
+				c.close();
+				dm.closeDB();
+				return;
+			}
+			try
+			{
+				ChargeHolder ch = new ChargeHolder(OrderTime, Order_Seq,
+						Order_Reqtranse, Order_Amount, Order_Publish_CardID,
+						payMethod, Charge_Status, ChargeNFC_Status,
+						TransferenceClose_Status, tac);
+
+				dm.UpdateOrderbyReqTranse(ch);
+			} catch (CustomTypeException e)
+			{
+
+				Log.d(TAG, "更新状态出错，aty_NFC_bigCard_Circle");
+				// 出错先关闭数据库资源
+				c.close();
+				dm.closeDB();
+				e.printStackTrace();
+			}
+		}
+		c.close();
+		dm.closeDB();
 	}
 }

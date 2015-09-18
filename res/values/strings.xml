@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	
     <string name="app_name">宜昌掌上公交</string>
     <string name="hello_world">Hello world!</string>
 	<string name="YUAN">元</string>
+	<string name="YEAR">年</string>
+	<string name="MONTH">月</string>
+	<string name="DAY">日</string>
 	<string name="consume_type1">消费</string>
 	<string name="consume_type2">复消</string>
 	<string name="consume_type3">充值</string>
@@ -13,16 +16,39 @@
     <string name="app_start_description">手机宜昌通天翼版客户端</string>
     <!-- 启动界面 -->
     
+    <!-- login界面-->
+    <string name="login_register_notice">请登录提升权限！</string>
+    <string name="login_notice">为了您的资金安全，请您在下方输入用户名和密码登录，非登录状态将无法查看相关记录！</string>
+    <string name="username_login">用户名：</string>
+    <string name="userpassword_login">密码：</string>
+    <string name="btn_login">登录</string>
+    <string name="btn_dislogin">放弃</string>
+    <string name="username_hint_login">请输入用户名</string>
+    <string name="userpassword_hint_login">请输入6位密码</string>
+    <string name="username_input_error">用户名最少4位！</string>
+    <string name="userpassword_input_error">密码为6位，请重新输入！</string>
+    <!-- login界面 -->
+    
     <!-- 功能选择界面 -->
     <string name="funcation_select">功能选择</string>
     <string name="bigCard_funcation">普通公交卡</string>
     <string name="swpCard_funcation">SWP-NFC卡</string>
     <string name="other_funcation">其它功能</string>
+    <string name="thirdPartyPay_funcation">补登</string>
+    <string name="thirdPartyPay_rcord_funcation">在线补登记录</string>
+    <string name="thirdPartyPay_Localrcord_funcation">本地补登记录</string>
+    <string name="humanPay_funcation">人工收银</string>
     <string name="bigCard_funcation_Des">查询普通公交卡余额，记录以及充值</string>
     <string name="swpCard_funcation_Des">查询SWP-NFC卡余额，记录以及充值</string>
     <string name="other_funcation_Des">其它管理功能</string>
+    <string name="thirdPartyPay_Des">将其他方式支付的订单进行卡片圈入</string>
+    <string name="thirdPartyPay_record_Des">最近在线补登记录信息</string>
+    <string name="thirdPartyPay_Localrecord_Des">最近本地补登记录信息</string>
+    <string name="humanPay_Des">人工收费后进行卡片圈入</string>
     <string name="network_error">网络故障，请检查网络！</string>
     <string name="network_error_notice">网络故障，部分功能将无法使用！</string>
+    <string name="NoSimCard">不能识别SWP-SIM卡，请与电信客服联系或到电信营业厅咨询！</string>
+    <string name="NotFind_applet">卡上没有找到公交应用,可能手机卡为非电信NFC-SWP卡,具体情况请致电电信运营商!</string>
     <!-- 功能选择界面 -->
 
     <!-- NFC-bigCard -->
@@ -58,6 +84,10 @@
 	<string name="bigCardInit_notice_error">请开启NFC后再试！</string>
 	<!-- NFC-bigCard-Init -->
 	
+	<!-- swp充值金额选择界面 -->
+	<string name="chargeNotice">注意：卡片最大卡余额为800.00元。您当前余额为300.00元，最多还可再充500.00元。</string>
+	<!-- swp充值金额选择界面 -->
+	
 	<!-- 充值方式选择页面 -->
 	<string name="company">武汉公用电子</string>
 	<string name="pay_money_notice">应付金额：</string>
@@ -76,6 +106,12 @@
 	<string name="bigCard_circle_notice">步骤二：点击下方按钮，在弹框出现后将宜昌通卡贴于手机NFC天线处，即开始圈存，没有提示前请不要移动公交卡，以防圈存失败。</string>
 	<!-- 圈存提示界面 -->
 	
+	<!-- swp圈存界面 -->	
+	<string name="swp_circle_notice">向服务器申请指令中，请稍后！</string>
+	<string name="swp_circle_alert">圈存过程中不要退出、断网，\n 否则将导致圈存失败！</string>
+	<string name="swp_circle_exit">坚持退出圈存</string>
+	<!-- swp圈存界面 -->	
+
 	<!-- 充值申请界面 -->
 	<string name="PayRequest">申请充值中,请稍后……</string>
 	<string name="PayRequest_error">申请充值失败!\n 1、检查网络；\n 2、联系宜昌掌上公交客服；\n</string>
@@ -88,6 +124,15 @@
 	<string name="RequestCirlce_fail">申请指令失败，即将返回主界面！</string>
 	<string name="RequestCirlce_success">申请指令成功，即将跳转至圈存界面！</string>
 	<!-- 充值申请界面 -->
+	
+	<!-- swp圈存界面-->
+	<string name="swp_circle_title">宜昌通手机卡圈存</string>
+	<string name="swp_circle_init_fail">圈存初始化失败，您可以联系公交客服，进行退款，即将退出!</string>
+	<string name="swp_requestcircle_fail_notice">申请圈存指令失败！ 1、检查网络状态， \n 2、充值金额+余额是否大于800元。</string>
+	<string name="swp_circle_fail">圈存失败！</string>
+	<string name="swp_circle_cancel">放弃</string>
+	<string name="swp_circle_retry">重试</string>
+	<!-- swp圈存界面 -->
 
 	<!-- 圈存完成提示界面 -->
 	<!-- <string name="circle_complete_title">圈存写卡完成</string> -->
@@ -103,11 +148,89 @@
 	<string name="circleing">圈存中，请勿移动公交卡，否则可能导致圈存失败！</string>
 	<string name="circle_success">圈存成功，可以拿开公交卡</string>
 	<string name="circle_fail">圈存失败，即将返回首页</string>
-	<string name="circle_report_success">圈存状态上报成功，即将返回首页</string>
-	<string name="circle_report_fail">圈存状态上报失败，即将返回首页</string>
+	<string name="circle_report_success">圈存状态上报成功</string>
+	<string name="circle_report_fail">圈存状态上报失败</string>
 	<string name="circle_fail_notice">圈存失败，您可以联系公交客服，进行退款!</string>
 	<!-- 圈存完成提示界面 -->
 	
+	<!-- SWP主页面 -->
+     <string name="tab0_main">我的宜昌通</string>
+     <string name="tab1_main">刷卡记录</string>
+     <string name="tab2_main">充值记录</string>
+     <string name="update_main">刷新</string>
+     <string name="setting_main">设置</string>
+     <string name="validday_main">有效日期</string>
+     <string name="bigcard_main">其它卡充值</string>
+     <string name="SWPcard_main">手机卡充值</string>
+     <string name="OrderSeq_head">订单流水号：</string>
+     <string name="Money_head">充值金额：￥</string>
+     <string name="PublishcardID_head">发行卡号：</string>
+     <string name="Time_head">时间：</string>
+     <string name="Status_head">状态：</string>
+     <string name="OrderNO_head">订单号：</string>
+     <string name="MerchantID_head">商户号：</string>
+     <string name="NewCard_Alert">手机卡为新卡,不允许充值！</string>
+     <string name="terminalName">终端号：</string>
+     <!-- SWP主页面 -->
+	
+	<!-- frg_title -->
+    <string name="frg_title_home">天翼宜昌通</string>
+    <!-- frg_title -->
+    	
+	 <!-- frg_home -->
+     <string name="update_home">刷新</string>
+     <string name="setting_home">设置</string>
+     <string name="validday_home">有效日期</string>
+     <string name="bigcard_home">普通卡充值</string>
+     <string name="SWPcard_home">手机卡充值</string>
+     <!-- frg_home -->
+     
+     <!-- frg_record -->
+     <string name="charge_record">充值金额：</string>
+     <string name="sample_order">201508010203040123012345678912</string>
+     <string name="charge_money_record">1.00元</string>
+     <string name="PulbishCardNO_record">13410006063</string>
+     <string name="status_record">状态：支付-成功/圈存-成功</string>
+     <string name="status_record_sample">没有充值记录</string>
+     <string name="time_record">2015年06月24日，11：17：56</string>
+     <string name="refund_fail">退单失败！</string>
+     <string name="refund_success">退单成功！</string>
+     <!-- frg_record -->
+     
+     <!-- 补登首页 -->
+     <string name="thirdPartyPay_Title">公交卡补登</string>
+     <string name="thirdPartyPay_Title_notice">步骤一：点击下方按钮，在弹框出现后将宜昌通卡贴于手机NFC天线处。</string>
+     <string name="thirdPartyPay_money_head">金额：</string>
+     <string name="thirdPartyPay_BankID_head">银行卡号：</string>
+     <!-- 补登首页 -->
+     
+     <!-- 补登圈存界面 -->
+   	 <string name="ThirdPartyPayCircle_title">普通卡补登</string>
+   	 <string name="ThirdPartyPayCircle_notice">请将宜昌通卡片&#x000A;紧贴手机NFC感应区，不要移动</string>
+     <string name="ThirdPartyPay_btn_circle">开始圈存</string>
+     <string name="ThirdPartyPay_youneedchocice">请选择补登金额！</string>
+     <string name="ThirdPartyPay_notice">申请补登信息中，请稍候！</string>
+     <string name="ThirdPartyPay_alert">补登过程中，请保持网络通畅，不要移动卡片，否则将导致补登失败！</string>
+     <!-- 补登圈存界面 -->
+     
+     <!-- 补登记录 -->
+     <string name="ThirdPartyPayRecord_title">补登记录</string>
+     <string name="ThirdPartyPayRecord_Nettitle">在线补登记录</string>
+     <string name="sample_BankID">6228102402564860000</string>
+     <string name="sample_time">20150816</string>
+     <string name="sample_money">100</string>
+     <string name="Select_ThirdPartyPayRecord">请选择补登数据！</string>
+     <string name="ThirdPartyPayRecord_beginCircle">点击“开始圈存”即开始圈存！</string>
+     <string name="ThirdPartyPay_readcard_compelete">卡片读取完毕，可以拿开卡片</string>
+     <!-- <string name="BankID_head">银行卡号：</string> -->
+     <!-- 补登记录 -->
+
+
+     <!-- 人工充值 -->
+     <string name="humanPay_title">人工充值</string>
+     
+     <!-- 人工充值 -->
+   
     <!-- NFC-bigcard string -->
     <string name="CardType"> 卡种类:</string>
     <string name="Consume_times">剩余消费次数:</string>

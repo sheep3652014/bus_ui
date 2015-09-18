@@ -24,7 +24,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-@SuppressLint("NewApi")
 public class frg_PopLog extends android.support.v4.app.DialogFragment
 {
 	private static final String CONSUME_TYPE = Global_Config.CONSUME_TYPE;

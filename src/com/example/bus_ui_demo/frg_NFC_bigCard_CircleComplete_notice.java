@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import com.example.application.myApplication;
 import com.example.config.Global_Config;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -73,6 +74,7 @@ public class frg_NFC_bigCard_CircleComplete_notice extends Fragment
 				Intent intent = new Intent(context, aty_main.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
+				((Activity)context).finish();
 			}
 		});
 		

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+     >
+	
+    <LinearLayout 
+        android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="horizontal"
+    	android:background="@color/l_blue"
+    	android:paddingTop="10dp"
+    	android:paddingBottom="10dp"
+        >
+        
+        <TextView 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/payMethod_notice"
+            android:textSize="@dimen/font_size_18"
+            android:textColor="@color/white"
+            style="@style/marginleftRightStyle"
+            />
+    </LinearLayout>
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        style="@style/marginleftRightStyle"
+        android:text="@string/company"
+        android:textSize="@dimen/font_size_16"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" 
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            style="@style/marginleftRightStyle"
+            android:text="@string/pay_money_notice"
+            android:textSize="@dimen/font_size_16" 
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:id="@+id/tv_chargeMoney"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            style="@style/marginleftRightStyle"
+            android:text="@string/pay_money"
+            android:textColor="@color/l_blue"
+            android:textSize="@dimen/font_size_16" />
+        
+    </LinearLayout>
+
+    <ImageView 
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/line"
+            />
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        style="@style/marginleftRightStyle"
+        android:text="@string/payMethod_notice"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_size_16" />
+
+    <Spinner
+        android:id="@+id/spinner_method"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/marginleftRightStyle"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:background="@drawable/mm_edit_normal"
+         />
+
+    <FrameLayout 
+        android:id="@+id/frame_paymethod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        
+    </FrameLayout>
+ <!--    <LinearLayout
+        android:id="@+id/Lin_bestpay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+         >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            style="@style/marginleftRightStyle"
+            android:text="@string/payMethod_bestpay_notice"
+            android:textColor="#ff555555"
+            android:textSize="@dimen/font_size_16" />
+
+        <EditText
+            android:id="@+id/et_PhoneNO"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            style="@style/marginleftRightStyle"
+            android:background="@drawable/mm_edit_normal"
+            android:hint="13400006063"
+            android:textSize="@dimen/font_size_16" 
+            android:textColor="@color/black"
+            android:inputType="phone"
+            />
+
+        <EditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/marginleftRightStyle"
+            android:background="@drawable/mm_edit_normal"
+            android:ems="6"
+            android:inputType="textPassword" 
+            android:visibility="gone"
+            >
+        </EditText>
+    </LinearLayout>
+    
+    <Button 
+        android:id="@+id/btn_next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/pay"
+        android:background="@drawable/btn_blue"
+        style="@style/marginleftRightStyle"
+        /> -->
+
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:text="@string/bestpay_advertise1"
+        android:textColor="#ff555555"
+        android:textSize="14sp"
+        />
+    <TextView 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/bestpay_advertise2"
+        android:textColor="#ff555555"
+        android:textSize="14sp"
+        />
+</LinearLayout>

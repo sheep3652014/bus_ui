@@ -65,7 +65,7 @@ public class OrderParams {
 	public static final String PRODUCTDESC = "PRODUCTDESC";
 
 	//业务类型，来自于SDK文档附录
-	public static final String BUSITYPE = "01";//"BUSITYPE";
+	public static final String BUSITYPE = "04";//"BUSITYPE";//01:只能用可体现余额，04：全部可用
 
 	public static final String MAC = "MAC";
 

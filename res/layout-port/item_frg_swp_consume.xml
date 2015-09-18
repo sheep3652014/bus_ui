@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" 
+    android:background="@color/light_gray"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    >
+    
+	<ImageView 
+	    android:id="@+id/im_type"
+	    android:layout_width="30dp"
+	    android:layout_height="match_parent"
+	    android:background="@drawable/charge_text"
+	    />
+	<TextView 
+	    android:id="@+id/tv_consume"
+	    android:layout_width="wrap_content"
+	    android:layout_height="match_parent"
+	    android:text="1.00元，2015年06月24日，终端号：00000000"
+	    android:gravity="center_vertical"
+	    />
+</LinearLayout>
